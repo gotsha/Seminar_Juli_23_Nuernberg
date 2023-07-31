@@ -25,7 +25,7 @@ int main()
         //main_array();
         //main_array_decay();
         //main_attributes();
-        main_auto();
+        //main_auto();
         //main_back_inserter();
         //main_bind();
         //main_casts();
@@ -44,7 +44,7 @@ int main()
         //main_exercises();
         //main_expression_templates();
         //main_generate();
-        //main_generic_lambdas();
+        main_generic_lambdas();
         //main_keyword_explicit();
         //main_folding();
         //main_functional_programming();
