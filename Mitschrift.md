@@ -231,3 +231,26 @@ Ansonsten gibt es eine Kopie des Objekts und somit ist die Ausgabe zweimal 124..
 Vorteil von lambdas:
 - mit implace-Funktionen muss man nicht seitenweise scrollen.
 - kürzere Schreibweise als Funktoren
+
+Verwenden lokaler Variablen in Lambda
+```cpp
+auto l1 = [=] { //alle als Kopie
+    std::cout << "Copy:      " << n << " " << m << std::endl;
+};
+
+auto l2 = [&] { //alle al Referenz
+    std::cout << "Reference: " << n << " " << m << std::endl;
+};
+
+auto l3 = [&, m] { // alle als Referenz außer die genannten
+    std::cout << "Both:      " << n << " " << m << std::endl;
+};
+
+auto l4 = [=, &m] { // alle als Kopie außer die genannten
+    std::cout << "More both: " << n << " " << m << std::endl;
+};
+```
+Der Datentyp von lambda ist ein std::function
+
+# Generische Lambda Ausdrücke
+
