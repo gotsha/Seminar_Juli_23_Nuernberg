@@ -22,7 +22,7 @@ ri++; // Wert von n wird erhöht -> 457
 // Schreibweise einfacher (keine * und & bei Zuweisungen...)
 // Adresse erhöhen (Zeigerarithmetik) gefährlich
 ```
-sayHello(std::string&& message) - && zeigt an, dass Referenz auf Objekte ohne Name übergeben werden, z.B. sayHello(strA + strB)
+sayHello(std\:\:string&& message) - && zeigt an, dass Referenz auf Objekte ohne Name übergeben werden, z.B. sayHello(strA + strB)
 
 LValue und RValue aus C. (C ist in C++ komplett (zu 99%) enthalten)
 - LValue -> links von Zuweisungszeichen -> hat eine Adresse.
@@ -53,7 +53,7 @@ bei dynamischen Zeigern (new, oder z.B. int* array)
 _Rule of Zero_
 auch hier dyn Speicherverwaltung möglich: reserve => initialer Speicher
 
-in C++ liegt ein std::vector<int> vec; auf dem Stack, der räumt sich von allein auf. Zusätzlich gibt es den heap. In Java gibt es nur den heap.
+in C++ liegt ein `std::vector<int> vec;` auf dem Stack, der räumt sich von allein auf. Zusätzlich gibt es den heap. In Java gibt es nur den heap.
 
 # auto
 Funktionen mit RÜckgabewert auto: Rückgabewerte in der Fkt müssen übereinstimmen
@@ -175,7 +175,7 @@ std::generate(
 static int i => globale Variable die aber nur in der definierenden Funktion angesprochen werden kann.
 
 Ein Lambda ist ein Funktor.
-std::begin(vec) ist die 'modernere' Schreibweise von vec.begin()
+_std::begin(vec)_ ist die 'modernere' Schreibweise von vec.begin()
 
 lokale Funktionen sind in C++ nicht erlaubt, lokale Klassen schon
 Der Aufruf `std::sort(std::begin(vec), std::end(vec), LocalComparer{});` aus Lambda01.cpp entspricht schon einem Lambda. Nur noch anders geschrieben.
@@ -400,3 +400,92 @@ Implementierung aufgerufen.
 Möchte man die int-Implementierung aufrufen geht dies mit
 `TinyContainer tc2(1)` mit runden Klammern.
         
+
+# Range-based for Loop
+Mglk `for (size_t i = 0; i != vec.size(); ++i)` ist die einzige, die einem die völlige
+Kontrolle gibt. Hier kann man alles machen: break, continue, adjust increment...
+
+**Index bei for_each**
+mit C++ 20 `for (int index{}; int n : vec) {}`
+
+Wdh: Aufpassen, dass man bei for loops nicht unbeabsichtigte Kopien macht: Referenzen bei 
+nicht elementaren Datentypen verwenden
+
+
+# Structured Binding
+**std::pair mit sinnvollen Namen**
+Die Fkt `std::pair<int, int> divide_remainder(int dividend, int divisor) {}` liefert ein std::pair<int, int>.
+Mit `auto result = divide_remainder(16, 3);` erhält man result vom Typ std::pair<int, int>. Zugriff auf
+Quotient und Rest erhält man über _result.first_ bzw. _result.second_.
+Mit 'auto [quotient, remainder] = divide_remainder(20, 3);` kann man die Ergebnisse über deren
+Namen _quotient_ und _remainder_ ansprechen.
+
+**Array mi Namen für die einzelnen Elemente**
+```cpp
+int arr[] = { 10, 11, 12 };
+auto& [ a, b, c ] = arr;
+```
+
+**Tuple**
+```cpp
+std::tuple <char, int, double> values{ 'Z', 987, 987.654 };
+std::get<0>(values);
+int n = 1;
+std::get<n>(values); //NEVER!!!
+std::get<2>(values);
+```
+
+
+# Variant
+bei std::variant muss vorher festgelegt werden welche Datentype das sein können, z.B.
+`std::variant<int, float, std::string> var{ 10.456f };`.
+Wenn das noch nicht feststeht muss man ein _std\:\:any_ verwenden.
+
+**generischer Besucher**
+wir müssen den Datentyp herausfinden -> decltype
+```cpp
+auto visitor = [](auto elem) {
+    using ElemType = decltype(elem);
+    
+    if (std::is_same<ElemType,int>::value == true) {
+        std::cout << "bin ein int " << elem << std::endl;
+    }
+    ...
+}
+```
+
+`using ElemType = decltype (elem)` entspricht `typedef decltype (elem) ElemType;`
+
+Will man das ganze universell auch für `auto& elem` machen : <a href=https://en.cppreference.com/w/cpp/header/type_traits>_Type traits_</a>
+```cpp
+using ElemTypeWithoutRef = std::remove_reference<ElemType>::type;
+
+if (std::is_same<ElemTypeWithoutRef>, int>::value == true) {
+    ...
+}
+```
+
+**Template-Spezialisierung**
+```cpp
+//primäres Template
+template <class T>
+struct my_remove_reference {
+    using type = T;
+};
+
+//Template Spezialisierung
+template <>
+struct my_remove_reference<int> {
+    using type = short; //Umbiegen von int in short
+};
+
+//Template Spezialisierung
+template <class T>
+struct my_remove_reference<T&> {
+    using type = T;
+    };
+```
+
+**constexpr**
+`if constexpr (std::is_same<ElemTypeWithoutRef>, int>::value == true) { }`
+- muss zur Kompilierzeit feststehen
