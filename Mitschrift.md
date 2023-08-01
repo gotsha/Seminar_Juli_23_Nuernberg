@@ -149,27 +149,27 @@ operator () () {}
 class Vorbeleger
 {
 private:
-	int m_factor;
-	int m_i;
+    int m_factor;
+    int m_i;
 
 public:
-	Vorbeleger (int factor) : m_factor(factor), m_i(0) {}
+    Vorbeleger (int factor) : m_factor(factor), m_i(0) {}
 
-	operator () () {
-		return m_factor * m_i + 1;
-	}
+    operator () () {
+        return m_factor * m_i + 1;
+    }
 };
 
 /*void wasIstEinFunktor() {
-	Vorbeleger belegeVor(2); // Instanz einer Klasse
-	int result = belegeVor(); //Anwendung des Aufrufoperators auf das Objekt belegeVor
+    Vorbeleger belegeVor(2); // Instanz einer Klasse
+    int result = belegeVor(); //Anwendung des Aufrufoperators auf das Objekt belegeVor
 }*/
 
 Vorbeleger beleger(3);
 std::generate(
-	start,
-	end,
-	beleger
+    start,
+    end,
+    beleger
 );
 ```
 static int i => globale Variable die aber nur in der definierenden Funktion angesprochen werden kann.
@@ -193,8 +193,8 @@ um eine Instanzvariable einer Lambda-Funktion intern verändern zu können muss di
 der () operator ist const deklariert, deswegen muss die Lambda-Funktion als mutable definiert werden
 ```cpp
 auto lambda = [variable = 123] () mutable {
-	++variable;
-	return variable;
+    ++variable;
+    return variable;
 }
 
 std::cout << lambda() << std::endl;
@@ -204,9 +204,9 @@ std::cout << lambda() << std::endl;
 theoretisch könnte ich auch
 ```cpp
 auto lambda = [/*variable = 123*/] () mutable {
-	static int variable = 123;
-	++variable;
-	return variable;
+    static int variable = 123;
+    ++variable;
+    return variable;
 }
 
 std::cout << lambda() << std::endl;
@@ -252,5 +252,151 @@ auto l4 = [=, &m] { // alle als Kopie außer die genannten
 ```
 Der Datentyp von lambda ist ein std::function
 
+
 # Generische Lambda Ausdrücke
 
+
+# Smart Pointer
+```cpp
+new Point [n];
+delete[] ip;
+delete ip; // was passiert dann? UB - undefined behaviour
+```
+für jedes _new_ muss auch ein _delete_ aufgerufen werden.
+
+
+## std::unique_ptr - Zu einem Zeitpunkt nur EIN BESITZER
+es existiert ein .get() um den hinter dem unique_ptr liegenden Zeiger zu gelangen.
+
+Mit _std::move_ kann der unique_ptr weitergereicht werden. 
+
+### Programm _test_01()_
+am Ende des Scopes werden die Destruktoren aufgerufen
+und in diesem Bsp werden die Pointer ptr1..3 gelöscht.
+
+### Programm _test_02()_
+beim Debuggen hat _ptr_ noch in der Zeile 
+```cpp
+std::unique_ptr<int> ptr{ loadUniquePointer() };
+```
+eine Adresse und den Wert 100. Noch bevor _loadUniquePointer()_ den ptr zurückgibt.
+=> copy - Elision
+Der Compiler erkennt, dass _loadUniquePointer()_ den passenden Typ zurückgibt und optimiert
+das. Ergebnis wird zurück in Rückgabeslot der aufrufenden Funktion kopiert.
+(s. CopyMoveElision bei den cpp_modern_examples)
+
+_storeUniquePointer(std::unique_ptr<int>& ptr)_ muss Referenz bekommen; andernfalls wäre
+das Programm nicht übersetzungsfähig.
+
+```cpp
+void storeUniquePointer(std::unique_ptr<int>& ptr)
+{
+    // take ownership right now:
+    std::unique_ptr<int> ptr2{ std::move(ptr) };
+}
+
+void test_02()
+{
+    // provide a function with a unique pointer: who owns the pointer now?
+    storeUniquePointer(ptr);
+
+    // does this work?
+    std::cout << "*ptr:   " << *ptr << std::endl;
+}
+```
+Das funktioniert nicht, da am Ende von storeUniquePointer() ptr2 vom Destructor gelöscht wird.
+
+
+## std::shared_ptr - geteilter Besitz
+enthält Zähler. Zweiter Speicher für Pointer, CB _control block_ der die Adresse und den
+Zähler enthält. Der Zeiger auf dem Stack zeigt auf diesen Speicher am heap.
+Wenn der Zähler von shared-Pointern durch die Destruktoren beim Löschen der Pointer
+vom Stack durch Verlassen des Scopes wieder auf 0 ist, wird auch der Speicher
+am Heap freigegeben.
+
+Wenn _storeSharedPointer()_ mit einer Referenz anstatt value definiert wird, wird auch kein
+zusätzlicher shared_ptr angelegt und somit der Zeiger auch nicht erhöht.
+
+`std::shared_ptr<int> ptr1{ new int{123} }`
+vs.
+`std::shared_ptr<int> ptr1{ std::make_shared<int>(123) }`
+. Die zweite Variange mit _make_shared_ ist effizienter da nur eine Speicherplatzanforderung
+am Heap ausgeführt wird.
+
+Man arbeitet normalerweise nicht alleine mit dem std::shared_ptr sondern zusammen mit dem
+std::weak_ptr
+
+
+## std::weak_ptr
+### test_01
+```cpp
+std::shared_ptr<int> ptr2{ weakPtr.lock() };
+if (ptr2 != nullptr) {...}
+```
+durch .lock() kann aus einem weak_ptr, einem schwachen Zeiger, ein starker Zeiger gemacht werden.
+Das funktioniert jedoch nicht immer -> nullptr check.
+Wenn wir den nullptr zurückbekommen wissen wir, dass der Datensatz im Speicher nicht mehr
+vorhanden ist.
+
+Im Code arbeiten wir ausschließlich mit starken Zeigern -> wir machen nicht *weakPtr um den Wert
+bekommen sondern *ptr2
+
+### test_02
+Forward declaration => riecht immer nach möglichen Problemen
+Problem bei test_0 ist, dass die Destruktoren nicht aufgerufen werden. Warum? Übungsaufgabe > SmartPointer >
+<a href="https://github.com/gotsha/cpp_modern_examples/blob/master/GeneralSnippets/Exercises/Exercises_15_SmartPointers.md#aufgabe-3-beobachtungen-eines-zyklus-von-smart-pointer-objekten">Aufgabe 15-3</a>
+Verweisen auf sich selbst mit std::shared_ptr -> selbst bei Verlassen des Scopes bleiben diese erhalten,
+sie sind jedoch nicht mehr erreichbar.
+Wenn m_rightNode und m_leftNode jedoch als std::weak_ptr definiert sind
+(s. WeakPtr.cpp, class ParentNode Zeile 83, 84), dann werden auch die Destruktoren sauber aufgerufen.
+
+std::shared_ptr ist _teuer_. unterstützt mutex, thread-safe...
+
+**Bsp. Observer Pattern**  
+Clients werden der Source mittels weak_ptr bekannt gemacht. Dadurch können die Clients auch 
+gelöscht werden. Die Source läuft einfach die Liste der angemeldeten Clients durch, macht einen
+lock und wenn diese noch da sind werden sie informiert.
+
+Frage ist immer: welches Objekt muss im Speicher sein? Wenn andere nicht darauf bestehen, dass
+das Objekt noch im Speicher ist, dann werden diese einen weak_ptr haben. Ansosnten einen shared_ptr.
+
+
+# Initialisierung
+
+Uniform Initialization = Brace Initialization
+
+Wann immer {} in Erscheinung treten haben wir es mit einer Initialisierung zu tun. Das gilt auch
+für Konstruktor-Aufruf.
+\{} : Initialisierung / gilt auch für Konstruktor-Aufruf
+() : Methodenaufruf
+
+**Ergänzungen**  
+`int n{};` ist das gleiche wie `int n = 0;`  
+`int n{1};`ist das gleiche wie `int n = 1;`  
+\{} ist die Vorbelegung mit dem Datentyp-spezifischen Nullwert.
+
+
+# std::initializer_list
+|Vergleich|
+|---|
+| std::vector | Daten liegen auf dem Heap (new) |
+| std::initializer_list | Daten liegen auf dem Stack (NO new)|
+|
+| std::string | Daten liegen auf dem Heap (new)
+| std:string_view | Daten liegen nicht auf dem Heap (NO new)
+|
+| std::array | Daten liegen auf dem Heap oder Stack
+| std::span | Daten sind bereits vorhanden
+
+## test_04
+```cpp
+TinyContainer(int value) {}
+TinyContainer(std::initializer_list<int>) {};
+
+TinyContainer tc2{ 1};
+```
+Hier wird per Festlegung von c++ die initializer_list
+Implementierung aufgerufen.
+Möchte man die int-Implementierung aufrufen geht dies mit
+`TinyContainer tc2(1)` mit runden Klammern.
+        
