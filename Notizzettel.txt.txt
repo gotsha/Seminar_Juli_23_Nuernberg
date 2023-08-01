@@ -71,4 +71,84 @@ Template Funktionen
 
 Generische Funktionen
 
+===========================================
+
+Lambda's
+
+std::memset
+
+C++ Strings library Null-terminated byte strings 
+Defined in header <cstring>
+
+void* memset( void* dest, int ch, std::size_t count );
+
+Hochperformant:
+
+Intel CPU:
+
+Lambda's:
+
+Lambda-Funktion
+
+Ein Lambda ist ein OBJEKT !!!!!!!!
+
+=============================================
+
+Wie sortiere ich einen Baum ???
+
+a) Ich benötige 2 Iteratoren
+
+b) Es gibt unterschiedliche Iteratoren-Typen:
+
+i) Forward-Iterator
+
+X) Random-Access Iterator:
+zb einen Zugriff auf ein Element an der Stelle "Index"
+00007FF717931D98  mov         edx,dword ptr [n1]  
+00007FF717931D9E  mov         rcx,qword ptr [__imp_std::cout (07FF717C1F6A0h)]  
+00007FF717931DA5  call        qword ptr [__imp_std::basic_ostream<char,std::char_traits<char> >::operator<< (07FF717C1F7C0h)]  
+00007FF717931DAB  lea         rdx,[string " mit " (07FF717B26030h)]  
+00007FF717931DB2  mov         rcx,rax  
+00007FF717931DB5  call        std::operator<<<std::char_traits<char> > (07FF7178D6459h)  
+
+00007FF717931DBA  mov         qword ptr [rbp+0C0h],rax  
+00007FF717931DC1  mov         edx,dword ptr [n2]  
+00007FF717931DC7  mov         rcx,qword ptr [rbp+0C0h]  
+
+vs.
+
+00007FF6BC73282E  mov         qword ptr [rbp+0C0h],rax  
+00007FF6BC732835  mov         rax,qword ptr [n2]  
+00007FF6BC73283C  mov         eax,dword ptr [rax]  
+00007FF6BC73283E  mov         dword ptr [rbp+0C8h],eax  
+00007FF6BC732844  mov         edx,dword ptr [rbp+0C8h]  
+00007FF6BC73284A  mov         rcx,qword ptr [rbp+0C0h]  
+
+00007FF717931DCE  call        qword ptr [__imp_std::basic_ostream<char,std::char_traits<char> >::operator<< (07FF717C1F7C0h)]  
+00007FF717931DD4  mov         qword ptr [rbp+0C8h],rax  
+00007FF717931DDB  lea         rdx,[std::endl<char,std::char_traits<char> > (07FF7178DC03Eh)]  
+00007FF717931DE2  mov         rcx,qword ptr [rbp+0C8h]  
+00007FF717931DE9  call        qword ptr [__imp_std::basic_ostream<
+
+// ====================================================
+
+C++
+
+== Objekt-Orientiert:               Bjarne Stroustrup // C with Classes
+
+== Prozedural
+
+== Generische Programmierung        Alexander Stepanov
+
+== STL: Rein generische Bibliothek
+
+// ====================================================
+
+Übungen:
+
+a) Move-Semantik:  Aufgabe 1
+
+b) Lambda Funktionen: :  Aufgabe 1
+
+c) Generische Lambda Funktionen: :  Aufgabe 1
 

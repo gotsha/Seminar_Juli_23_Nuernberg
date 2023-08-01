@@ -6,10 +6,112 @@ module modern_cpp:lambda;
 
 namespace Lambdas {
 
+    // int i = 0;
+
+    void frage()
+    {
+        std::vector<int> zahlen;
+
+        std::sort(zahlen.begin(), zahlen.end());
+    }
+
+    int belegeVor()
+    {
+        static int i = 0;
+        ++i;
+        return 2 * i + 1;
+    }
+
+    template <typename T>
+    auto belegeVor()
+    {
+        static T i = 0;
+        ++i;
+        return 2 * i + 1;
+    }
+
+    // Funktor // aufrufbares Objekt
+    class Vorbeleger
+    {
+    private:
+        int m_factor;
+        int m_i;
+
+    public:
+        Vorbeleger (int factor) : m_factor(factor), m_i(0)
+        {
+        }
+
+        // int belegeVor () {}
+        auto operator () () {
+            ++m_i;
+            return m_factor * m_i + 1;
+        }
+    };
+
+    // Historisch: Die bessere Variante 
+
+
+    void wasIstEinFunktor()
+    {
+        Vorbeleger belegeVor(3);
+
+        int result = belegeVor();
+    }
+
+    void wiederholung()
+    {
+        //   using == typedef
+        typedef std::vector<long> MyContainerOld;   // <=== zentrale Stelle
+
+        using MyContainer = std::vector<long>;
+
+
+        // STL Container
+        MyContainer numbers(10);
+
+        // Was ist ein Iterator-Objekt? Eine Position
+        // STL Iteratoren
+        auto start = numbers.begin();
+        MyContainer::iterator start2 = numbers.begin();
+        auto end = numbers.end();
+
+        // STL Algorithmus
+        // ==>  std::memset ... void*,  byte count, ...
+        std::fill(
+            start,
+            end,
+            123
+        );
+
+        // Auch eine Möglichkeit ...
+        //for (int i = 0; i != numbers.size(); ++i) {
+        //    numbers[i] = 2 * i + 1;
+        //}
+
+        // historisch die erste Variante
+        std::generate(
+            start,
+            end,
+            // 2 * i + 1
+            belegeVor<long>   
+        );
+
+        Vorbeleger beleger(3);
+
+        std::generate(
+            start,
+            end,
+            // 2 * i + 1
+            beleger
+        );
+    }
+
     bool compare (int n1, int n2) {
         return n1 < n2;
     }
 
+    // Funktor // aufrufbares Objekt
     class Comparer
     {
     private:
@@ -17,9 +119,14 @@ namespace Lambdas {
 
     public:
         Comparer() : m_flag{ true } {}
+
         Comparer(bool flag) : m_flag{ flag } {}
 
         bool operator() (int n1, int n2) const {
+            return (m_flag) ? n1 < n2 : n1 > n2;
+        }
+
+        bool operator() (int n1, int n2, int parameter) const {
             return (m_flag) ? n1 < n2 : n1 > n2;
         }
     };
@@ -27,7 +134,7 @@ namespace Lambdas {
     void test_00()
     {
         Comparer obj{ false };
-        bool result = obj(1, 2);
+        bool result = obj(1, 2, 4);
         std::cout << std::boolalpha << result << std::endl;
     }
 
@@ -44,6 +151,7 @@ namespace Lambdas {
             LocalComparer(bool flag) : m_flag{ flag } {}
 
             bool operator() (int n1, int n2) const {
+                
                 return (m_flag) ? n1 < n2 : n1 > n2;
             }
         };
@@ -55,13 +163,40 @@ namespace Lambdas {
         }
         std::cout << std::endl;
 
-        std::sort(std::begin(vec), std::end(vec), compare);
+        std::sort(
+            vec.begin(),
+            vec.end(),
+            compare
+        );
+
         // or
-        std::sort(std::begin(vec), std::end(vec), Comparer{});
+        std::sort(
+            std::begin(vec),
+            std::end(vec),
+            Comparer()
+        );
         // or
-        std::sort(std::begin(vec), std::end(vec), Comparer{false});
+        std::sort(
+            std::begin(vec), 
+            std::end(vec),
+            Comparer(false)
+        );
         // or
-        std::sort(std::begin(vec), std::end(vec), LocalComparer{});
+        std::sort(
+            std::begin(vec),
+            std::end(vec), 
+            LocalComparer{}
+        );
+
+        // or
+        std::sort(
+            std::begin(vec),
+            std::end(vec),
+            [flag = false] (const auto n1, const auto n2) {    
+                std::cout << n1 << " mit " << n2 << std::endl;
+                return (flag) ? n1 < n2 : n1 > n2;
+            }
+        );
 
         for (int n : vec) {
             std::cout << n << ' ';
@@ -108,7 +243,7 @@ namespace Lambdas {
     void test_04() {
 
         // defining a lambda without 'auto'
-        std::function<int(int, int, int)> threeArgs([](int x, int y, int z) {
+        std::function<int(int, int, int)> threeArgs([](int x, int y, int z) -> int {
             return x + y + z; 
             }
         );
@@ -123,9 +258,27 @@ namespace Lambdas {
         // in the scope of the lambda: We do so by defining a variable
         // in the lambda-capture without specifying its type:
 
-        // lambda with variable definition
-        auto lambda = [variable = 10] () { return variable; };
+        // lambda with member variable // instance variable definition
+        auto lambda = [variable = 123]() mutable {
+            //static int variable = 123;
+            ++variable;
+            return variable;
+        };
+
+   //     variable = 113;
+
+        auto lambda1 = lambda;   // 123  ==> lambda1
+
         std::cout << lambda() << std::endl;
+        std::cout << lambda() << std::endl;
+        std::cout << lambda() << std::endl;
+
+        std::cout << lambda1() << std::endl;
+        std::cout << lambda1() << std::endl;
+        std::cout << lambda1() << std::endl;
+
+        std::cout << "Stop" << std::endl;
+
 
         // Captures default to 'const value':
         // The mutable keyword removes the 'const' qualification from all captured variables
@@ -140,7 +293,7 @@ namespace Lambdas {
         std::cout << std::endl;
     }
 
-    void test_06() {
+    void test_06(/*int x*/) {
 
         int n = 1;
         int m = 2;
@@ -191,7 +344,7 @@ namespace Lambdas {
             std::cout << "Reference: " << n << " " << m << std::endl;
         };
 
-        return lambda;  // I would't do this never ever :-)
+        return lambda;     // I would't do this never ever :-)
     }
 
     void test_07() {
@@ -232,16 +385,20 @@ namespace Lambdas {
 void main_lambdas()
 {
     using namespace Lambdas;
-    test_00();
-    test_01();
-    test_02();
-    test_03();
-    test_04();
-    test_05();
-    test_06();
+
+    //wasIstEinFunktor();
+    //wiederholung();
+
+   // test_00();
+   // test_01();
+    //test_02();
+    //test_03();
+    //test_04();
+   // test_05();
+   // test_06();
     test_07();
-    test_08();
-    test_09();
+    //test_08();
+    //test_09();
 }
 
 // =====================================================================================
