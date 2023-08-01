@@ -35,7 +35,7 @@ namespace RangeBasedForLoop {
 
         // a) Very, very classic style ... C-stylistic
         for (size_t i = 0; i != vec.size(); ++i) {
-            std::cout << vec[i] << " ";
+            std::cout << vec[i] << " ";  // break; continue; return; 
         }
         std::cout << std::endl;
 
@@ -47,7 +47,7 @@ namespace RangeBasedForLoop {
         );
         std::cout << std::endl;
 
-        // c) Same as b), modified ranges
+        // c) Same as b), modified ranges:  [from, to)
         std::for_each(
             std::next(std::begin(vec)),    // Iterator-object for begin of range
             std::prev(std::end(vec)),      // Iterator-object for end of range
@@ -59,7 +59,7 @@ namespace RangeBasedForLoop {
         std::for_each(
             std::begin(vec),               // Iterator-object for begin of range
             std::end(vec),                 // Iterator-object for end of range
-            ElementProcessor{}        // "callable" object
+            ElementProcessor{}             // "callable" object / operator()
         );
         std::cout << std::endl;
 
@@ -74,10 +74,10 @@ namespace RangeBasedForLoop {
         std::cout << std::endl;
 
         // =========================================================================
-        // Range-based 'for' Loop examples
+        // Range-based 'for' Loop examples   // for_each
 
         // f) Using Range-based 'for' Loop: Very modern style
-        for (int n : vec) {
+        for ( int n : vec) {
             std::cout << n << " ";
             if (n == 2)  // break is possible
                 break;
@@ -85,24 +85,29 @@ namespace RangeBasedForLoop {
         std::cout << std::endl;
 
         // g) Same as f), using 'const int&'
-        for (const int& n : vec) {
-            std::cout << n << " ";
+        // Referenz: Würde ich NICHT bei elementaren Variablen nehmen
+        for (int n : vec) {
+           //  std::cout << n << " ";
+            n++;
         }
         std::cout << std::endl;
 
         // h) Same as f): Using 'auto' keyword to cause type inference to be used
         for (auto n : vec) {
             std::cout << n << " ";
+            n++;
         }
         std::cout << std::endl;
 
-        // i) Same as g), using 'const auto&': type inference by reference
-        for (const auto& n : vec) {
+        // i) Same as g), using 'const auto&': type deduction by reference
+        for ( auto& n : vec) {
             std::cout << n << " ";
+            n++;
         }
         std::cout << std::endl;
 
-        // j) Real C++: How the compiler 'sees' a Range-based 'for' Loop
+        // j) Real C++: How the compiler 'sees' a
+        // Range-based 'for' Loop
         std::vector<int>::iterator begin = std::begin(vec);
         std::vector<int>::iterator end = std::end(vec);
 
@@ -126,12 +131,19 @@ namespace RangeBasedForLoop {
         }
         std::cout << std::endl;
 
+        // C++ 20
         // l) Range-based 'for' loop with initializer,
         // we can now use the index variable inside the for statement
-        for (int index{}; int n : vec) {
-            std::cout << index << ": " << n << " " << std::endl;
-            ++index;
+        {
+            int index{};
+            for (int n : vec) {
+                std::cout << index << ": " << n << " " << std::endl;
+                ++index;
+            }
         }
+
+     //   ++index;
+
     }
 }
 

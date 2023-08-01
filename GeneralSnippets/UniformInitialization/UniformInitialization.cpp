@@ -11,7 +11,10 @@ namespace UniformInitialization {
 
     void test_01()
     {
+        int nn = 0;
+
         int n{};              // n equals 0
+
         float f{};            // f equals 0.0
         double d{};           // d equals 0.0
         unsigned long l{};    // l equals 0
@@ -29,7 +32,9 @@ namespace UniformInitialization {
 
     void test_02()
     {
-        int n{ 1 };          // n equals 1
+        int nn = 1;
+
+        int n{1};          // n equals 1
         float f{ 1.5f };     // f equals 1.5
         double d{ 2.5 };     // d equals 2.5
 
@@ -49,10 +54,14 @@ namespace UniformInitialization {
 
     void test_03()
     {
-        [[ maybe_unused]] struct Struct obj0;         // uninitialized !!!
+        int* ip;
+        int* ip2{};
+
+        struct Struct obj0;                           // uninitialized !!!
         struct Struct obj1 {};                        // obj1.m_i => 0, obj1.m_j => 0
         struct Struct obj2 { 1, 2 };                  // obj2.m_i => 1, obj2.m_j => 2
         struct Struct obj3 { 3 };                     // obj3.m_i => 3, obj3.m_j => 0
+ 
         // gcc: warning: missing initializer for member 'Struct::m_j'
     }
 
@@ -119,7 +128,7 @@ namespace UniformInitialization {
     {
         std::vector<int> myArray{ 1, 2, 3, 4, 5 };
 
-        std::map<std::string, int> myMap
+        std::map<std::string, int> myMap   // std::pair // Schlüssel / Wert
         {
             { "Hans", 1958 },
             { "Sepp", 1956 } 
@@ -191,12 +200,12 @@ namespace UniformInitialization {
     // Nested Structures / *Brace Elision* 
 
     struct Inner {
-        int m_array[2];
+        int m_array[2];  // std::array
     };
 
     void test_09()
     {
-        [[ maybe_unused]] Inner inner1; // uninitialized
+        Inner inner1;                   // uninitialized
         Inner inner2{ };                // m_array[0] => 0 & m_array[1] => 0
         Inner inner3{ { 1, 2 } };       // Direct initialization
         Inner inner4{ 1, 2 };           // Uses Brace Elision (!) of m_array

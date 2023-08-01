@@ -10,12 +10,14 @@ namespace InitializerList {
     int myIntAdderFunction(std::initializer_list<int> list)
     {
         int result{};
+
         std::for_each(
             std::begin(list),
             std::end(list),
             [&result](int value) {
                 result += value; 
-            });
+            }
+        );
         return result;
     }
 
@@ -29,7 +31,10 @@ namespace InitializerList {
 
     void test_01() {
         // testing functions expecting lists in function call
-        int sum = myIntAdderFunction({ 1, 3, 5, 7, 9 });
+
+        int sum = myIntAdderFunction({ 1, 3, 5, 7, 9, 10, 13 });
+
+
         std::cout << sum << std::endl;
         std::cout << myIntAdderFunction({ 2, 4, 6, 8 }) << std::endl;
     }
@@ -78,7 +83,9 @@ namespace InitializerList {
             }
         };
 
-        // same example - with brace elision
+
+
+        // same example - with brace elision // Klammern auslassen
         Polygon polygon2
         {                          // c'tor Polygon - using brace initialization syntax
             { 45.0, 45.0 },        // c'tor Point - using brace initialization syntax
@@ -94,14 +101,18 @@ namespace InitializerList {
     class TinyContainer {
     public:
         TinyContainer() {}
-        TinyContainer(int value) {}
-        TinyContainer(std::initializer_list<int>) {};
-        TinyContainer(const std::vector<int>&) {};
+        TinyContainer(int) {}
+        TinyContainer(std::initializer_list<int>) {}
+        TinyContainer(const std::vector<int>&) {}
     };
 
     void test_04() {
+
+        std::vector<int> vec1{ 10 };
+        std::vector<int> vec2( 10 );
+
         TinyContainer tc0;                                 // TinyContainer::TinyContainer ()
-        TinyContainer tc1{ 1, 2, 3, 4 };                   // TinyContainer::TinyContainer (std::initializer_list<int>)
+        TinyContainer tc1{ { 1, 2, 3, 4 } };               // TinyContainer::TinyContainer (std::initializer_list<int>)
         TinyContainer tc2{ 1 };                            // TinyContainer::TinyContainer (std::initializer_list<int>)
         TinyContainer tc3(1);                              // TinyContainer::TinyContainer (int)
         TinyContainer tc4{ };                              // TinyContainer::TinyContainer ()
