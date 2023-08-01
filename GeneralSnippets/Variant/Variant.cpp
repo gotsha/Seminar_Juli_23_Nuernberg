@@ -105,13 +105,64 @@ namespace VariantDemo {
 
     // -------------------------------------------------------------------
 
+// primäres Template
+template <class T>
+struct my_remove_reference {
+    using type = T;
+};
+
+// Template Spezialisierung
+template <>
+struct my_remove_reference<int> {
+    using type = int;
+};
+
+// Template Spezialisierung
+template <class T>
+struct my_remove_reference<T&> {
+    using type = T;
+};
+
+
+
     void test_03() {
 
         std::variant<int, float, std::string> var{ 3.5f };
 
         // using a generic visitor (matching all types in the variant)
-        auto visitor = [](auto const& elem) {
-            std::cout << elem << std::endl;
+        auto visitor = [](const auto& elem) {
+
+            using ElemType = decltype (elem);  // ElemType ==>  int
+
+            using ElemTypeWithoutReference =
+                my_remove_reference<ElemType>::type;
+
+            using ElemTypeWithoutReferenceAndConst =
+                std::remove_const<ElemTypeWithoutReference>::type;
+
+
+            // ElemTypeWithoutReference dummy{};
+
+            // typedef decltype (elem) ElemType2;
+
+            int n = 123;
+
+          //  if constexpr (n == 12345)
+
+            if constexpr ( std::is_same<ElemTypeWithoutReferenceAndConst, int>::value == true )
+            {
+                std::cout << "bin ein int: " << elem << std::endl;
+            }
+            else if constexpr (std::is_same<ElemTypeWithoutReferenceAndConst, float>::value == true) {
+                std::cout << "bin ein float: " << elem << std::endl;
+            }
+            else if constexpr (std::is_same<ElemTypeWithoutReferenceAndConst, std::string>::value == true) {
+                std::cout << "bin ein std::string: " << elem << std::endl;
+                std::cout << " und bin  " << elem.size() <<  " Zeichen lang" << std::endl;
+            }
+            else {
+                std::cout << "unbekannt ..." << elem << std::endl;
+            }
         };
 
         std::visit(visitor, var);
@@ -269,9 +320,9 @@ void main_variant()
     using namespace VariantDemo;
     //test_01();
     //test_02();
-    //test_03();
+    test_03();
     //test_04();
-    test_05();
+    // test_05();
     //test_06();
     //test_07();
     //test_08();

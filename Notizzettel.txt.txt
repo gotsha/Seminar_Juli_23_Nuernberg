@@ -402,4 +402,33 @@ Excel / Sheets:  Zelle / Cell:  Number, string, Date, double,
 
 Game Programming:  Board:  Figure:  Pro Board Slot eine andere Figur.
 
+=================================================================
 
+Betrachung von Datentypen:
+
+Reflection   // Java oder C#
+
+Type Traits  // Typ Spuren 
+
+Analyse von Datentypen.
+
+Zur Übersetzungs- oder zur Laufzeit ????????????????????
+
+A) Geht zur Laufzeit -- mit Konsequenzen
+
+B) Geht zur Übersetzungszeit:  mit constexpr
+
+
+=================================================================
+
+Aufgaben zu Smart Pointer: 1, 2 und 4
+
+Aufgaben zu STL-Algorithmen: Aufgabe 2
+
+Fibonacci:
+
+std::vector <int> zahlen (20);   // Vektor hat die Länge 20
+
+std::generate ( zahlen.begin(), zahlen.end(),  [] () {   }     )  ;
+
+=================================================================
