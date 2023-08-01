@@ -19,7 +19,7 @@ namespace UniquePointerGeneral {
         std::cout << "*ptr:    " << *ptr << std::endl;
 
         // take ownership right now:
-        // std::unique_ptr<int> ptr2{ std::move(ptr) };
+         std::unique_ptr<int> ptr2{ std::move(ptr) };
     }
 
     void storeUniquePointerSafe(const std::unique_ptr<int>& ptr)
@@ -87,7 +87,7 @@ namespace UniquePointerGeneral {
         storeUniquePointer(ptr);
 
         // C++ Core Guidelines
-        storeUniquePointerAlternate(ptr.get());
+        // storeUniquePointerAlternate(ptr.get());
 
         // does this work?
         std::cout << "*ptr:   " << *ptr << std::endl;

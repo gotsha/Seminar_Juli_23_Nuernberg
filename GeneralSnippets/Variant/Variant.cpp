@@ -8,7 +8,13 @@ namespace VariantDemo {
 
     void test_01() {
 
-        std::variant<int, float, std::string> var{ 10.5f };
+        std::vector<int> vec1;  // homogenen Container
+
+        // homogen == versus heterogen
+        std::vector<std::variant<int, float, std::string>> vec2;
+
+        std::variant<int, float, std::string> var{ 123 };
+        // std::any a;
 
         std::cout
             << var.index()
@@ -141,6 +147,7 @@ namespace VariantDemo {
     public:
         Visitor() = default;
 
+        // Überladen
         void operator() (int n) {
             std::cout << "int: " << n << std::endl;
         }
@@ -260,14 +267,14 @@ namespace VariantDemo {
 void main_variant()
 {
     using namespace VariantDemo;
-    test_01();
-    test_02();
-    test_03();
-    test_04();
+    //test_01();
+    //test_02();
+    //test_03();
+    //test_04();
     test_05();
-    test_06();
-    test_07();
-    test_08();
+    //test_06();
+    //test_07();
+    //test_08();
 }
 
 // =====================================================================================

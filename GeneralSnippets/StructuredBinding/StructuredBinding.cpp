@@ -6,10 +6,16 @@ module modern_cpp:structured_binding;
 
 namespace StructuredBinding {
 
+    //void allgemein(int dividend, int divisor, int& rest, int& modulo) {
+    //    int quotient = dividend / divisor;
+    //    int remainder = dividend % divisor;
+    //}
+
     std::pair<int, int> divide_remainder(int dividend, int divisor) {
         int quotient = dividend / divisor;
         int remainder = dividend % divisor;
-        return std::make_pair(quotient, remainder);
+        std::pair<int, int> result { quotient, remainder };
+        return result;
     }
 
     void test_01() {
@@ -20,16 +26,20 @@ namespace StructuredBinding {
     }
 
     void test_02() {
-        auto [quotient, remainder] = divide_remainder(20, 3);
+        auto [quotient, rest] = divide_remainder(20, 3);
         std::cout << "20 / 3 is "
             << quotient << " with a remainder of "
-            << remainder << std::endl;
+            << rest << std::endl;
     }
 
     void test_03() {
         int arr[] = { 10, 11, 12 };
-        auto [ a, b, c ] = arr;
-        std::cout << a << ", " << b << ", " << c << std::endl;
+
+        const auto& [ a, b, c ] = arr;
+
+       // a = 123;
+
+        std::cout << arr[0] << ", " << b << ", " << c << std::endl;
     }
 
     void test_04() {
