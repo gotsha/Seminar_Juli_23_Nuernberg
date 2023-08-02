@@ -486,6 +486,113 @@ struct my_remove_reference<T&> {
     };
 ```
 
-**constexpr**
-`if constexpr (std::is_same<ElemTypeWithoutRef>, int>::value == true) { }`
-- muss zur Kompilierzeit feststehen
+
+# constexpr
+wenn eine Klassen-Fkt als friend deklariert ist, dann gehört die Fkt eigentlich nicht mehr
+zur definierenden Klasse.
+
+Operatoren können in und außerhalb der Klasse implementiert werden.
+```cpp
+friend constexpr Complex operator+(const Complex& x, const Complex& y)
+{
+    float real = x.real() + y.real();
+    float imag = x.imag() + y.imag();
+    return Complex{ real, imag };
+}
+```  
+Würde man hier friend weglassen, könnte man nicht _x_ und _y_ übergeben sondern nur einen der
+beiden. Für den zweiten würde man dann die Elemente von _this_ nutzen.  
+```cpp
+constexpr Complex operator+(const Complex& x)
+{
+    
+}
+```
+
+
+# Self-Invoking Lambda
+<a href=https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Lambda/Lambda01.cpp#L379>test_09</a>
+ist die moderne Version des Makros. Durch das _()_ am Ende wird das constexpr Lambda direkt aufgerufen.
+
+Das gleiche ist auch der Fall bei [CRC8-Bsp](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Lambda/Lambda01.cpp#L379)
+
+Mehr oder weniger alles was in C verfügbar ist kann als constexpr verwendet werden.
+
+
+# UDL - User Defined Literal
+durch Überladung des Operators \"\" UND Syntax-Ergänzung für das Suffix (z.B. _kg, _km, _rgb).
+UDLs sollten einen \_ vorangestellt haben um diese von Literalen wie long, float,... unterscheiden
+zu können (z.B. 123467L, 12.3F)
+
+Bsp: `Color operator"" _rgb (unsigned long long int value) {...}`  
+der Suffix, den wir haben wollen kommt nach dem \"\". Dann können wir z.B. Variablen wie
+`Color red = 0xFF0000_rgb;` oder `Color abc = 123456_rgb` anlegen.
+
+UDLs erwarten den größtmöglichen Datentyp, hier z.B. long long. Ansonsten auch long double bzw. char*
+
+
+# Variadische Templates
+einpacken: vorangestelltes ...  
+auspacken: nachgestelltes ...
+
+Beispiel
+```cpp
+template<typename T>
+void printer(T n) {
+    std::cout << n << ' ';
+}
+
+// mehrer => Pack
+template<typename T, typename ... U>    // m einpacken
+void printer(T n, U ... m) {            // m einpacken : 2, 3, 4, 5
+    std::cout << n << ' ';
+    printer(m ...);                     // m auspacken
+}
+
+void test_seminar() {
+    printer(1, 2, 3, 4, 5);             // 5 Args
+}
+```
+Normalerweise verwendet man bei den variadischen Templates immer zwei Funktionen
+(für den Fall, dass es nur noch einen Parameter gibt und den mit mehreren Par.).
+
+
+Wozu? viele Hilfsfunktionen nehmen eine Variable Anzahl an Parametern entgegen. Diese
+nutzen variadische Templates. Als Beispiel hier eine mögliche Implementierung von
+_std::make_unique()_:
+
+```cpp
+template <typename T, typename ... TArgs >
+std::unique_ptr <T> my_make_unique(TArgs ... args) {
+    std::unique_ptr <T> ptr {new T{args ...}};
+    return ptr;
+}
+```
+Wenn wir stattdessen folgendes nutzen:
+```cpp
+template <typename T, typename ... TArgs >
+std::unique_ptr <T> my_make_unique_02(TArgs&& ... args) {
+    std::unique_ptr <T> ptr {new T{ std::forward<TArgs>(args) ...}};
+    return ptr;
+}
+```
+dann wird _my_make_unique()_ hier mit einer sogenannten Universal Reference aufgerufen.  
+Doppeltes && ist bei Templates eine universal reference, keine rvalue refernce wie sonst.  
+Mehr dazu in [PerfectForwarding](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/PerfectForwarding/PerfectForwarding.md)
+
+Nicht ganz so schön wie mit einer universal reference ist auch die Möglichkeit
+```cpp
+std::unique_ptr <T> my_make_unique_01(const TArgs& ... args) {
+    std::unique_ptr <T> ptr {new T{ args ... }};
+    return ptr;
+}
+```
+std::forward ist quasi der Bruder von std::move
+
+
+# vector - emplace_back
+`std::vector<MyClass> vec;`
+Vermeiden einer nutzlosen Kopie wie bei 
+`vec.push_back(MyClass {1, 2, 3});` durch
+`vec.emplace_back(1, 2, 3);`. Dadurch wird das Objekt direkt in place angelegt.
+
