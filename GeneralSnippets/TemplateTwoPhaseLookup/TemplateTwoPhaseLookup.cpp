@@ -7,7 +7,8 @@ module modern_cpp:template_two_phase_lookup;
 namespace Templates_TwoPhaseNameLookup
 {
     // Non-Template Code Example:
-    class Base {
+    class Base 
+    {
     public:
         void doSomething() {
             std::cout << "doSomething" << std::endl;
@@ -34,10 +35,10 @@ namespace Templates_TwoPhaseNameLookup
     class DerivedEx : public BaseEx<T> {
     public:
         // using BaseEx<T>::doSomething;
+
         void callBase() {
-            // doSomething();      // <=== remove comment: 
-            this->doSomething();
             BaseEx<T>::doSomething();
+
         }
     };
 

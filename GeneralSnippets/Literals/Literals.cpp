@@ -34,6 +34,7 @@ namespace Literals_With_Separators {
 namespace Literals_Color_Runtime {
 
     class Color {
+
         friend std::ostream& operator<< (std::ostream&, const Color&);
 
     private:
@@ -59,7 +60,7 @@ namespace Literals_Color_Runtime {
     }
 
     // literal operator ("cooked" version)
-    Color operator"" _rgb(unsigned long long int value) {
+    Color operator"" _rgb (unsigned long long  value) {
 
         if (value > 0xFFFFFF) {
             throw std::runtime_error("literal too large");
@@ -95,6 +96,11 @@ namespace Literals_Color_Runtime {
 
     void test_02() {
         Color red = 0xFF0000_rgb;
+
+        // int n = 11111111111111111111111111111111111111111;
+
+        Color whichColor = 0xAABBFF0000_rgb;
+
         std::cout << red << std::endl;
         Color magenta = 0xFF00FF_rgb;
         std::cout << magenta << std::endl;
@@ -151,7 +157,9 @@ namespace Literals_Color_CompileTime {
     }
 
     // literal operator ("cooked" version)
-    constexpr Color operator"" _rgb(unsigned long long int value) {
+    constexpr Color operator"" _rgb(const unsigned long long int value) {
+
+        // static_assert (value > 0xFFFFFF, "");
 
         if (value > 0xFFFFFF) {
             throw std::logic_error("literal too large");
@@ -165,10 +173,12 @@ namespace Literals_Color_CompileTime {
     }
 
     // literal operator ('raw' and 'constexpr' version)
+    // std::string
     constexpr Color operator"" _rgb(const char* literal, size_t length) {
 
         // std::string is partially 'constexpr'
         std::string arg(literal);
+
         if (arg.size() == 2 /* 0x */ + 6 /* FF FF FF */) {
 
             std::string rs{ arg.substr(2, 2) };
@@ -200,24 +210,24 @@ namespace Literals_Color_CompileTime {
     // throws errors at compile time
     void test_03_with_errors() {
         // value outside rgb range
-        // constexpr Color col1 = 0x1FFFFFF_rgb;
+        //constexpr Color col1 = 0x1FFFFFF_rgb;
 
         // illegal hexadecimal digit
-        // constexpr Color col2 = "0x00GG00"_rgb;
+      Color col2 = "0x00EE00"_rgb;
     }
 }
 
-void main_literals()
+void main_literals() 
 {
-    using namespace Literals_With_Separators;
-    // test_01();
+    //using namespace Literals_With_Separators;
+    //// test_01();
 
-    using namespace Literals_Color_Runtime;
-    test_02();
-    test_02_with_errors();   // throws exceptions at runtime
+    //using namespace Literals_Color_Runtime;
+    //test_02();
+    //test_02_with_errors();   // throws exceptions at runtime
 
     using namespace Literals_Color_CompileTime;
-    test_03();
+   // test_03();
     test_03_with_errors();   // throws errors at compile time
 }
 

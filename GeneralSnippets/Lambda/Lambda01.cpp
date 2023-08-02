@@ -376,7 +376,7 @@ namespace Lambdas {
         auto constexpr ConstValue = [] () {
             /* several lines of code ... - "very complex" computation */
             return 123;
-        }();
+        } ();
 
         std::cout << "Const Value: " << ConstValue << std::endl;
     }

@@ -432,3 +432,166 @@ std::vector <int> zahlen (20);   // Vektor hat die Länge 20
 std::generate ( zahlen.begin(), zahlen.end(),  [] () {   }     )  ;
 
 =================================================================
+
+constexpr
+
+Templates
+
+===============================
+
+friend:
+
+Ein bissweilen kritisiertes Feature in C++:
+
+Es ist möglich,
+
+Klassen, globale Funktionen
+
+durch eine ANDERE Klasse zum Freund zu ernennen.
+
+===>
+
+Dadurch haben diese Klassen, diese globale Funktionen
+Zugriff auf die privaten Daten der Klasse, die die Freundschaft erteilt hat.
+
+
+Self-Invoking Lambda
+
+=============================================================================
+
+Konstanten // Literale 
+
+123
+
+1234.456F
+
+1234l   long
+
+234ll   long long
+
+100_km  kilometer
+
+50_kg   kilogramm          NICHT im LEXIKON von C/C++ enthalten
+
+==> int / long
+
+12345_rgb  ;  Farbe RGB 
+
+0x12345_rgb  ;  Farbe RGB 
+
+"10:05:30"_time
+
+==> Klasse Color
+
+
+Technologische Konstanten
+
+UDL User Defined Literal // Benutzerdefinierte Literale
+
+Umsetzung:
+
+  operator ""   UND Syntax Ergänzung für das Suffix (  _kg,  _km, _rgb )
+
+Erwartet jeweils den "größten" Datentyp:
+
+long long
+
+long double
+
+char*
+
+========================================================
+
+Variadische Templates
+
+a) Debugger
+
+b) Cpp Insights
+
+==>  Vielen Funktionen:  Code Bloat 
+
+Whyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy ?
+
+
+====================================================
+
+...   Ellipses
+
+Parameter Pack
+
+func (TArgs ... args)
+
+func (1, 2, 3)
+
+Was passiert: Auspacken:  
+
+args ...   ==> Komma-getrennte Liste erzeugt.
+
+C++:  std::initializer_list:   { 1, 2, 3 }
+
+Möchte auf jedes Elements eines Packs eine Funktion anwenden.
+
+Es gibt immer eine Lösung.
+
+// =================================================
+
+Frage:
+
+Wie implementiere ich die Methoden eines Klassen Template ???
+
+NICHT wie die einer normalen Klasse !!!
+
+Ist hier beschrieben:
+
+https://github.com/pelocpp/cpp_modern_examples/blob/master/GeneralSnippets/TemplateClassBasics/TemplatesClassBasics.md
+
+Das Inclusion Modell
+
+Das Explicit Instantiation Modell
+
+
+// =================================================
+
+
+C++ und STL Algorithmen
+
+back_inserter
+
+
+// =================================================
+
+
+Hash-Tabelle // Dictionary:
+
+Java:  Hashmap   / Index ==> 
+
+C++:   std::unordered_map
+
+Was ist std::map:   Baum / Tree:  Sortiert
+
+// =================================================
+
+Was ist ein Callable ???
+
+Invoke	std::invoke: "Uniformly invoking anything callable"
+
+// =================================================
+
+Übungsaufgaben:
+
+Aufgaben zum Perfect Forwarding:   
+
+   Aufgabe 2: Ausführungszeit einer Funktion
+
+
+Aufgaben zu variadischen Templates:
+
+   Aufgabe 1: Logische Operationen mit beliebig vielen Operanden
+
+   Aufgabe 2: decltype und Type-Traits am Beispiel von sameType
+
+
+Aufgaben zu Utility Klassen:
+
+   Aufgabe 2	Visitor-Entwurfsmuster mit std::variant und std::visit
+

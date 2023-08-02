@@ -24,6 +24,8 @@ namespace PerfectForwarding {
         overloaded(arg);
     }
 
+
+
     template <typename T>
     void forwardingPerfect(T&& arg) {
         overloaded(std::forward<T>(arg));
@@ -47,7 +49,7 @@ namespace PerfectForwarding {
 
     void test_01() {
         test_forwarding();
-        // test_forwardingPerfect();
+        test_forwardingPerfect();
     }
 }
 
