@@ -1093,6 +1093,12 @@
     <Image Include="CopyMoveElision\CopyMoveElision.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\Shared.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Unique.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Notizzettel.txt.txt" />
