@@ -41,7 +41,7 @@ int main()
         //main_decltype();
         //main_default_initialization();
         //main_erase_remove_idiom();
-        main_exercises();
+        //main_exercises();
         //main_expression_templates();
         //main_generate();
         //main_generic_lambdas();
@@ -51,11 +51,11 @@ int main()
         //main_functional_programming_alternate();
         //main_initializer_list();
         //main_input_output_streams();  
-        //main_invoke();
+        main_invoke();
         //main_lambdas();
         //main_lambda_and_closure();
         //main_lambdas_this_closure();
-        //main_literals();
+       //main_literals();
         //main_memory_leaks_detection();
         //main_metaprogramming_01();
         //main_metaprogramming_02();

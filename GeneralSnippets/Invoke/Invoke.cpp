@@ -22,13 +22,14 @@ namespace StdInvoke {
         Incrementer(int x) : m_x{ x } {}
 
         void incrementBy(int n) { m_x += n; }
-        void operator()() { std::cout << "m_x: " << m_x << std::endl; }
+
+        void operator() () { std::cout << "m_x: " << m_x << std::endl; }
     };
 
     class TimesThree
     {
     public:
-        int operator()(int n) { return 3 * n; }
+        int operator() (int n) { return 3 * n; }
     };
 
     // testing scenarios for std::invoke
@@ -46,6 +47,7 @@ namespace StdInvoke {
         // => 7
 
         int(*fadd) (int, int) = &add;
+
         result = std::invoke(fadd, 5, 6);
         std::cout << "result: " << result << std::endl;
         // => 11
@@ -55,6 +57,7 @@ namespace StdInvoke {
         std::invoke(&Incrementer::incrementBy, &inc, 5);
         inc();  // output
         // => 5
+
 
         // invoke (access) a (public) data member (!):
         // C++20: useful for 'projections'
@@ -72,13 +75,15 @@ namespace StdInvoke {
         // => 15
 
         // lambda expression:
-        auto a = std::invoke([](auto a, auto b) {return a + b; }, 11, 12);
+        auto a = std::invoke(
+            [] (auto a, auto b) {return a + b; }, 11, 12
+        );
         std::cout << "a: " << a << std::endl;
         // => 23
     }
 }
 
-void main_invoke()
+void main_invoke() 
 {
     using namespace StdInvoke;
     test_01();

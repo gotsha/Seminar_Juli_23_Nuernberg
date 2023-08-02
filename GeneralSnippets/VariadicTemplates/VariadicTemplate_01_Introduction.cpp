@@ -4,7 +4,105 @@
 
 module modern_cpp:variadic_templates;
 
-namespace VariadicTemplatesIntro_01 {
+namespace VariadicTemplates_Seminar {
+
+    template<typename T>
+    void printer(T n) {
+        std::cout << n << ' ';
+    }
+
+    // mehrere ===> Pack
+
+    template<typename T, typename ... TRest>      // einpacken
+    void printer(T n, TRest ... m) {              // einpacken : 2, 3, 4, 5
+        std::cout << n << ' ';
+        printer <TRest ...>(m ...);               // auspacken
+    }
+
+    void test_seminar() {
+
+        printer<int, int, int, int, int> (1, 2, 3, 4, 5);  // 5 Args
+    }
+
+    class Unknown {
+    private:
+        int m_var1;
+        int m_var2;
+        int m_var3;
+
+    public:
+        Unknown(const Unknown& other ){
+            std::cout << "copy c'tor()" << std::endl;
+            m_var1 = other.m_var1;
+            m_var2 = other.m_var2;
+            m_var3 = other.m_var3;
+        }
+
+        Unknown() : m_var1{ -1 }, m_var2{ -1 }, m_var3{ -1 } {
+            std::cout << "c'tor()" << std::endl;
+        }
+
+        Unknown(int n) : m_var1{ n }, m_var2{ -1 }, m_var3{ -1 } {
+            std::cout << "c'tor(int)" << std::endl;
+        }
+
+        Unknown(int n, int m) : m_var1{ n }, m_var2{ m }, m_var3{ -1 } {
+            std::cout << "c'tor(int, int)" << std::endl;
+        }
+
+        Unknown(int n, int m, int k) : m_var1{ n }, m_var2{ m }, m_var3{ k } {
+            std::cout << "c'tor(int, int, int)" << std::endl;
+        }
+
+        friend std::ostream& operator<< (std::ostream&, const Unknown&);
+    };
+
+    std::ostream& operator<< (std::ostream& os, const Unknown& obj) {
+        os
+            << "var1: " << obj.m_var1
+            << ", var2: " << obj.m_var2
+            << ", var3: " << obj.m_var3 << std::endl;
+
+        return os;
+    }
+
+    // Universal Referenz
+
+    template <typename T, typename ... TArgs>
+    std::unique_ptr <T> my_make_unique(const TArgs& ... args) {
+
+        std::unique_ptr <T> ptr { new T { args ... } };
+        return ptr;
+    }
+
+    template <typename T, typename ... TArgs>
+    std::unique_ptr <T> my_make_unique_02(TArgs&& ... args) {
+
+        std::unique_ptr <T> ptr { new T{ std::forward<TArgs> (args) ... } };
+        return ptr;
+    }
+
+    void test_seminar_why() {
+
+        std::unique_ptr <Unknown> up 
+            = std::make_unique<Unknown>(1, 2, 3);
+
+        std::unique_ptr <Unknown> up2 
+            = my_make_unique_02<Unknown, int, int, int>(1, 2, 3);
+    }
+
+    void test_seminar_why_02() {
+
+        std::vector<Unknown> vec;
+       // vec.push_back(Unknown {1, 2, 3});
+
+        vec.emplace_back(1, 2, 3);
+
+    }
+}
+
+
+namespace VariadicTemplatesIntro_01 { 
 
     // ====================================================================
     // 1. Beispiel für ein variadisches Template:
@@ -293,6 +391,10 @@ namespace VariadicTemplatesIntro_05 {
 
 void main_variadic_templates_introduction()
 {
+    using namespace VariadicTemplates_Seminar;
+    test_seminar_why_02();
+    return;
+
     using namespace VariadicTemplatesIntro_01;
     test_printer_01();
 
