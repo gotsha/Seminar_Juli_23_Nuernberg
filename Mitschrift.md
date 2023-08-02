@@ -487,7 +487,7 @@ struct my_remove_reference<T&> {
 ```
 
 
-# constexpr
+# [constexpr](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/ConstExpr/Constexpr.md)
 wenn eine Klassen-Fkt als friend deklariert ist, dann gehört die Fkt eigentlich nicht mehr
 zur definierenden Klasse.
 
@@ -519,7 +519,7 @@ Das gleiche ist auch der Fall bei [CRC8-Bsp](https://github.com/gotsha/Seminar_J
 Mehr oder weniger alles was in C verfügbar ist kann als constexpr verwendet werden.
 
 
-# UDL - User Defined Literal
+# [UDL - User Defined Literal](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Literals/Literals.md)
 durch Überladung des Operators \"\" UND Syntax-Ergänzung für das Suffix (z.B. _kg, _km, _rgb).
 UDLs sollten einen \_ vorangestellt haben um diese von Literalen wie long, float,... unterscheiden
 zu können (z.B. 123467L, 12.3F)
@@ -531,7 +531,7 @@ der Suffix, den wir haben wollen kommt nach dem \"\". Dann können wir z.B. Varia
 UDLs erwarten den größtmöglichen Datentyp, hier z.B. long long. Ansonsten auch long double bzw. char*
 
 
-# Variadische Templates
+# [Variadische Templates](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/VariadicTemplates/VariadicTemplates_01_Introduction.md)
 einpacken: vorangestelltes ...  
 auspacken: nachgestelltes ...
 
@@ -580,14 +580,51 @@ dann wird _my_make_unique()_ hier mit einer sogenannten Universal Reference aufg
 Doppeltes && ist bei Templates eine universal reference, keine rvalue refernce wie sonst.  
 Mehr dazu in [PerfectForwarding](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/PerfectForwarding/PerfectForwarding.md)
 
-Nicht ganz so schön wie mit einer universal reference ist auch die Möglichkeit
+Nicht ganz so schön wie mit einer universal reference ist auch die einfache Möglichkeit
 ```cpp
 std::unique_ptr <T> my_make_unique_01(const TArgs& ... args) {
     std::unique_ptr <T> ptr {new T{ args ... }};
     return ptr;
 }
 ```
-std::forward ist quasi der Bruder von std::move
+`std::forward` ist quasi der Bruder von `std::move`. Prüft ob lvalue; wenn, dann Referenz, sonst std::move
+
+
+## Einschub: Kommaoperator
+anderer Name: Sequenzoperator
+```cpp
+int n=1;
+int m=2;
+int a=0;
+a = n = 3, m = 4;
+
+//oder
+for (m=0, n=1 ; m<100 ; m++) { ... }
+```
+
+## Ellipsis
+```cpp
+template <typename T>
+void doSomething(T param) {
+    std::cout << param << " ";
+}
+
+template <typename ... TArgs>
+void myDoSomethingForAll(const TArgs& ... args) {
+    std::initializer_list<int> list = {
+        (doSomething(args) , 0) ...
+    };
+}
+
+void my_test() {
+    myDoSomethingForAll(1, 23.45, 'A');
+}
+
+my_test();
+```
+die Initializer-List dient nur dazu, den Pack auszupacken. Durch den Kommaoperator mit
+anschließender `0` wird hier erreicht, dass die `doSomething()` Fkt aufgerufen werden kann
+obwohl sie vom type `void` ist.
 
 
 # vector - emplace_back
@@ -595,4 +632,59 @@ std::forward ist quasi der Bruder von std::move
 Vermeiden einer nutzlosen Kopie wie bei 
 `vec.push_back(MyClass {1, 2, 3});` durch
 `vec.emplace_back(1, 2, 3);`. Dadurch wird das Objekt direkt in place angelegt.
+
+
+# STL
+## [std::transform](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Transform/Transform.md)
+Umsetzen eines Containers _A_ auf einen Containern _B_
+v.a. hilfreich beim Arbeiten mit STL-Containern. Zum Kopieren des einen in den anderen
+Containers wird dies intern standard über den Index gemacht -> Größe muss vorher feststehen.
+
+Es ist auch möglich, das über `push_back()` zu machen: `std::back_inserter()`.
+
+ohne `back_inserter`:
+```cpp
+std::vector<std::string, size_t> phonebook {
+    {   },
+    {   },
+    {   },
+};
+std::vector<std::string> names(5);
+std::transform(
+    std::begin(phonebook),
+    std::end(phonebook),
+    std::begin(names),
+    [](const std::pair<std::string, size_t>& entry) {
+        const auto& [name, phone_number] = entry;
+        return name;
+    }
+);
+```
+
+## std::back_inserter
+
+mit `back_inserter`:
+
+```cpp
+std::unordered_map<std::string, size_t> phonebook
+{
+    { "Hans Meier" , 12345678 },
+    { "Franz Schneider", 81726354 },
+    { "Hubert Mueller", 87654321 }
+};
+std::vector<std::string> names{};
+std::transform(
+    std::begin(phonebook),
+    std::end(phonebook),
+    std::back_inserter(names),
+    [](const std::pair<std::string, size_t>& entry) {
+        const auto& [name, phone_number] = entry;
+        return name;
+    }
+);
+```
+`std::back_inserter` verwendet intern einen `push_back` => die Daten werden hinten angehängt
+
+
+# Callable - [std::invoke](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Invoke/Invoke.md)
 
