@@ -10,19 +10,19 @@ n=123
 
 // b)
 *ip=123; 
-ip++; // Adresse wird abhängig vom Datentyp um x Byte erhöht // Zeigerarithmetik
+ip++; // Adresse wird abhÃ¤ngig vom Datentyp um x Byte erhÃ¶ht // Zeigerarithmetik
 
 // Referenz
 int& ri = n;// ri ist ein Alias // Stellvertretername
 // Zuordnung mittels
 ri = 456; // -> ohne Dereferenzierung...
-ri++; // Wert von n wird erhöht -> 457
+ri++; // Wert von n wird erhÃ¶ht -> 457
 
 // Wozu Referenzen wenn es auch Pointer gibt?
 // Schreibweise einfacher (keine * und & bei Zuweisungen...)
-// Adresse erhöhen (Zeigerarithmetik) gefährlich
+// Adresse erhÃ¶hen (Zeigerarithmetik) gefÃ¤hrlich
 ```
-sayHello(std\:\:string&& message) - && zeigt an, dass Referenz auf Objekte ohne Name übergeben werden, z.B. sayHello(strA + strB)
+sayHello(std\:\:string&& message) - && zeigt an, dass Referenz auf Objekte ohne Name Ã¼bergeben werden, z.B. sayHello(strA + strB)
 
 LValue und RValue aus C. (C ist in C++ komplett (zu 99%) enthalten)
 - LValue -> links von Zuweisungszeichen -> hat eine Adresse.
@@ -33,30 +33,30 @@ LValue und RValue aus C. (C ist in C++ komplett (zu 99%) enthalten)
 # Move Semantics
 new Anweisung entspricht malloc in C
 ```BigData::BigData(const BigData& data) {} //das ist der copy Constructor. 
-vec.push_back(BigData(10, 1)); //dadurch wird ein temporäres Objekt angelegt; dieses wird danach auch wieder freigegeben -> destructor
+vec.push_back(BigData(10, 1)); //dadurch wird ein temporÃ¤res Objekt angelegt; dieses wird danach auch wieder freigegeben -> destructor
 ```
 
-um diese unnütze Kopie zu vermeiden gibt es move anstatt copy semantics. Eigentlich klauen wir dadurch das Objekt
+um diese unnÃ¼tze Kopie zu vermeiden gibt es move anstatt copy semantics. Eigentlich klauen wir dadurch das Objekt
 BigData::BigData(BigData&& data) noexcept;
 
 wenn new... brauchen wir immer ein delete -> nicht den Standard-Destruktor nutzen
 
 _Rule of Three_
-Klassen benötigen standardmäßig diese Elemente wenn es bei dynamische Objekte davon gibt oder Rückgaben mit return.
+Klassen benÃ¶tigen standardmÃ¤ÃŸig diese Elemente wenn es bei dynamische Objekte davon gibt oder RÃ¼ckgaben mit return.
 (new, oder z.B. int* array)
 
 _Rule of Five_
-um unnütze Kopien zu vermeiden -> move constructor + assignment
+um unnÃ¼tze Kopien zu vermeiden -> move constructor + assignment
 bei dynamischen Zeigern (new, oder z.B. int* array)
 
 
 _Rule of Zero_
-auch hier dyn Speicherverwaltung möglich: reserve => initialer Speicher
+auch hier dyn Speicherverwaltung mÃ¶glich: reserve => initialer Speicher
 
-in C++ liegt ein `std::vector<int> vec;` auf dem Stack, der räumt sich von allein auf. Zusätzlich gibt es den heap. In Java gibt es nur den heap.
+in C++ liegt ein `std::vector<int> vec;` auf dem Stack, der rÃ¤umt sich von allein auf. ZusÃ¤tzlich gibt es den heap. In Java gibt es nur den heap.
 
 # auto
-Funktionen mit RÜckgabewert auto: Rückgabewerte in der Fkt müssen übereinstimmen
+Funktionen mit RÃœckgabewert auto: RÃ¼ckgabewerte in der Fkt mÃ¼ssen Ã¼bereinstimmen
 ```cpp
 auto tueWas(bool flag, float f1, double d1) {
 	if (flag) {
@@ -107,9 +107,9 @@ void anwendung()
 
 declval gibt ohne declval keinen Sinn. 
 
-auto wird häufig mit Referenz-Keyword & verwendet um unbeabsichtigte Kopien zu vermeiden
+auto wird hÃ¤ufig mit Referenz-Keyword & verwendet um unbeabsichtigte Kopien zu vermeiden
    
-const Schlüsselwort wird verwendet wenn möglich da der Compiler solche Objekte effizienter übersetzt.
+const SchlÃ¼sselwort wird verwendet wenn mÃ¶glich da der Compiler solche Objekte effizienter Ã¼bersetzt.
 
 # Lambdas
 
@@ -125,17 +125,17 @@ auto start = numbers.begin();
 // std::vector<int>::iterator start = numbers.begin();
 auto end = numbers.end()
 
-// Vektor füllen
+// Vektor fÃ¼llen
 // STL Algorithmus
 // ==> verwendet intern std::memset was hochperfomant ist
 std::fill(start, end, 123);
 
-//wenn man nicht alles gleich belegen möchte, z.B. wie bei vec[i] = 2*i+1;
+//wenn man nicht alles gleich belegen mÃ¶chte, z.B. wie bei vec[i] = 2*i+1;
 int belegeVor() {
-	static int i = 0; //unschön weil hierdurch quasi globale Variable angelegt wird
+	static int i = 0; //unschÃ¶n weil hierdurch quasi globale Variable angelegt wird
 	return 2*i+1;
 }
-// Historisch: die erste Variante -> Übergabe von Funktionsadresse
+// Historisch: die erste Variante -> Ãœbergabe von Funktionsadresse
 std::generate(start, end, belegeVor);
 
 
@@ -179,17 +179,17 @@ _std::begin(vec)_ ist die 'modernere' Schreibweise von vec.begin()
 
 lokale Funktionen sind in C++ nicht erlaubt, lokale Klassen schon
 Der Aufruf `std::sort(std::begin(vec), std::end(vec), LocalComparer{});` aus Lambda01.cpp entspricht schon einem Lambda. Nur noch anders geschrieben.
-Lambda wäre dann
+Lambda wÃ¤re dann
 `std::sort(std::begin(vec), std::end(vec), [] (int n1, int n2) { return n1 < n2; });`
 Ein Lambda/Eine Lambda-Funktion (eigentlich ein schlechter Name) ist ein Ojekt (Instanz einer Klasse)!!!!! keine Funktion
 
-Funktionsaufrufe bei elementaren Datentypen, z.B. compare(int n1, int n2) by value machen (da ist es aufwändiger für den Prozessor mit Referenzen zu arbeiten). Andere Typen by reference um Kopien zu vermeiden
+Funktionsaufrufe bei elementaren Datentypen, z.B. compare(int n1, int n2) by value machen (da ist es aufwÃ¤ndiger fÃ¼r den Prozessor mit Referenzen zu arbeiten). Andere Typen by reference um Kopien zu vermeiden
 
-Wenn man jetzt wiedre das Flag mit reinbringen möchte:
+Wenn man jetzt wiedre das Flag mit reinbringen mÃ¶chte:
 `std::sort(std::begin(vec), std::end(vec), [flag = true] (int n1, int n2) { return (flag) ? n1 < n2 : n1 > n2; });`
 flag wird hier ohne Datentyp angegeben da durch die Vorbelegung automatisch definiert.
 
-um eine Instanzvariable einer Lambda-Funktion intern verändern zu können muss die Fkt als mutable definiert werden
+um eine Instanzvariable einer Lambda-Funktion intern verÃ¤ndern zu kÃ¶nnen muss die Fkt als mutable definiert werden
 der () operator ist const deklariert, deswegen muss die Lambda-Funktion als mutable definiert werden
 ```cpp
 auto lambda = [variable = 123] () mutable {
@@ -201,7 +201,7 @@ std::cout << lambda() << std::endl;
 std::cout << lambda() << std::endl;
 std::cout << lambda() << std::endl;
 ```
-theoretisch könnte ich auch
+theoretisch kÃ¶nnte ich auch
 ```cpp
 auto lambda = [/*variable = 123*/] () mutable {
     static int variable = 123;
@@ -225,12 +225,12 @@ std::cout << lambda1() << std::endl;
 std::cout << lambda1() << std::endl;
 std::cout << lambda1() << std::endl;
 ```
-macht zählt im Falle der Verwendung von `static` die Variable von 124 bis 129.
+macht zÃ¤hlt im Falle der Verwendung von `static` die Variable von 124 bis 129.
 Ansonsten gibt es eine Kopie des Objekts und somit ist die Ausgabe zweimal 124..126.
 
 Vorteil von lambdas:
 - mit implace-Funktionen muss man nicht seitenweise scrollen.
-- kürzere Schreibweise als Funktoren
+- kÃ¼rzere Schreibweise als Funktoren
 
 Verwenden lokaler Variablen in Lambda
 ```cpp
@@ -242,18 +242,18 @@ auto l2 = [&] { //alle al Referenz
     std::cout << "Reference: " << n << " " << m << std::endl;
 };
 
-auto l3 = [&, m] { // alle als Referenz außer die genannten
+auto l3 = [&, m] { // alle als Referenz auÃŸer die genannten
     std::cout << "Both:      " << n << " " << m << std::endl;
 };
 
-auto l4 = [=, &m] { // alle als Kopie außer die genannten
+auto l4 = [=, &m] { // alle als Kopie auÃŸer die genannten
     std::cout << "More both: " << n << " " << m << std::endl;
 };
 ```
 Der Datentyp von lambda ist ein std::function
 
 
-# Generische Lambda Ausdrücke
+# Generische Lambda AusdrÃ¼cke
 
 
 # Smart Pointer
@@ -262,7 +262,7 @@ new Point [n];
 delete[] ip;
 delete ip; // was passiert dann? UB - undefined behaviour
 ```
-für jedes _new_ muss auch ein _delete_ aufgerufen werden.
+fÃ¼r jedes _new_ muss auch ein _delete_ aufgerufen werden.
 
 
 ## std::unique_ptr - Zu einem Zeitpunkt nur EIN BESITZER
@@ -272,21 +272,21 @@ Mit _std::move_ kann der unique_ptr weitergereicht werden.
 
 ### Programm _test_01()_
 am Ende des Scopes werden die Destruktoren aufgerufen
-und in diesem Bsp werden die Pointer ptr1..3 gelöscht.
+und in diesem Bsp werden die Pointer ptr1..3 gelÃ¶scht.
 
 ### Programm _test_02()_
 beim Debuggen hat _ptr_ noch in der Zeile 
 ```cpp
 std::unique_ptr<int> ptr{ loadUniquePointer() };
 ```
-eine Adresse und den Wert 100. Noch bevor _loadUniquePointer()_ den ptr zurückgibt.
+eine Adresse und den Wert 100. Noch bevor _loadUniquePointer()_ den ptr zurÃ¼ckgibt.
 => copy - Elision
-Der Compiler erkennt, dass _loadUniquePointer()_ den passenden Typ zurückgibt und optimiert
-das. Ergebnis wird zurück in Rückgabeslot der aufrufenden Funktion kopiert.
+Der Compiler erkennt, dass _loadUniquePointer()_ den passenden Typ zurÃ¼ckgibt und optimiert
+das. Ergebnis wird zurÃ¼ck in RÃ¼ckgabeslot der aufrufenden Funktion kopiert.
 (s. CopyMoveElision bei den cpp_modern_examples)
 
-_storeUniquePointer(std::unique_ptr<int>& ptr)_ muss Referenz bekommen; andernfalls wäre
-das Programm nicht übersetzungsfähig.
+_storeUniquePointer(std::unique_ptr<int>& ptr)_ muss Referenz bekommen; andernfalls wÃ¤re
+das Programm nicht Ã¼bersetzungsfÃ¤hig.
 
 ```cpp
 void storeUniquePointer(std::unique_ptr<int>& ptr)
@@ -304,24 +304,24 @@ void test_02()
     std::cout << "*ptr:   " << *ptr << std::endl;
 }
 ```
-Das funktioniert nicht, da am Ende von storeUniquePointer() ptr2 vom Destructor gelöscht wird.
+Das funktioniert nicht, da am Ende von storeUniquePointer() ptr2 vom Destructor gelÃ¶scht wird.
 
 
 ## std::shared_ptr - geteilter Besitz
-enthält Zähler. Zweiter Speicher für Pointer, CB _control block_ der die Adresse und den
-Zähler enthält. Der Zeiger auf dem Stack zeigt auf diesen Speicher am heap.
-Wenn der Zähler von shared-Pointern durch die Destruktoren beim Löschen der Pointer
+enthÃ¤lt ZÃ¤hler. Zweiter Speicher fÃ¼r Pointer, CB _control block_ der die Adresse und den
+ZÃ¤hler enthÃ¤lt. Der Zeiger auf dem Stack zeigt auf diesen Speicher am heap.
+Wenn der ZÃ¤hler von shared-Pointern durch die Destruktoren beim LÃ¶schen der Pointer
 vom Stack durch Verlassen des Scopes wieder auf 0 ist, wird auch der Speicher
 am Heap freigegeben.
 
 Wenn _storeSharedPointer()_ mit einer Referenz anstatt value definiert wird, wird auch kein
-zusätzlicher shared_ptr angelegt und somit der Zeiger auch nicht erhöht.
+zusÃ¤tzlicher shared_ptr angelegt und somit der Zeiger auch nicht erhÃ¶ht.
 
 `std::shared_ptr<int> ptr1{ new int{123} }`
 vs.
 `std::shared_ptr<int> ptr1{ std::make_shared<int>(123) }`
 . Die zweite Variange mit _make_shared_ ist effizienter da nur eine Speicherplatzanforderung
-am Heap ausgeführt wird.
+am Heap ausgefÃ¼hrt wird.
 
 Man arbeitet normalerweise nicht alleine mit dem std::shared_ptr sondern zusammen mit dem
 std::weak_ptr
@@ -335,26 +335,26 @@ if (ptr2 != nullptr) {...}
 ```
 durch .lock() kann aus einem weak_ptr, einem schwachen Zeiger, ein starker Zeiger gemacht werden.
 Das funktioniert jedoch nicht immer -> nullptr check.
-Wenn wir den nullptr zurückbekommen wissen wir, dass der Datensatz im Speicher nicht mehr
+Wenn wir den nullptr zurÃ¼ckbekommen wissen wir, dass der Datensatz im Speicher nicht mehr
 vorhanden ist.
 
-Im Code arbeiten wir ausschließlich mit starken Zeigern -> wir machen nicht *weakPtr um den Wert
+Im Code arbeiten wir ausschlieÃŸlich mit starken Zeigern -> wir machen nicht *weakPtr um den Wert
 bekommen sondern *ptr2
 
 ### test_02
-Forward declaration => riecht immer nach möglichen Problemen
-Problem bei test_0 ist, dass die Destruktoren nicht aufgerufen werden. Warum? Übungsaufgabe > SmartPointer >
+Forward declaration => riecht immer nach mÃ¶glichen Problemen
+Problem bei test_0 ist, dass die Destruktoren nicht aufgerufen werden. Warum? Ãœbungsaufgabe > SmartPointer >
 <a href="https://github.com/gotsha/cpp_modern_examples/blob/master/GeneralSnippets/Exercises/Exercises_15_SmartPointers.md#aufgabe-3-beobachtungen-eines-zyklus-von-smart-pointer-objekten">Aufgabe 15-3</a>
 Verweisen auf sich selbst mit std::shared_ptr -> selbst bei Verlassen des Scopes bleiben diese erhalten,
 sie sind jedoch nicht mehr erreichbar.
 Wenn m_rightNode und m_leftNode jedoch als std::weak_ptr definiert sind
 (s. WeakPtr.cpp, class ParentNode Zeile 83, 84), dann werden auch die Destruktoren sauber aufgerufen.
 
-std::shared_ptr ist _teuer_. unterstützt mutex, thread-safe...
+std::shared_ptr ist _teuer_. unterstÃ¼tzt mutex, thread-safe...
 
 **Bsp. Observer Pattern**  
-Clients werden der Source mittels weak_ptr bekannt gemacht. Dadurch können die Clients auch 
-gelöscht werden. Die Source läuft einfach die Liste der angemeldeten Clients durch, macht einen
+Clients werden der Source mittels weak_ptr bekannt gemacht. Dadurch kÃ¶nnen die Clients auch 
+gelÃ¶scht werden. Die Source lÃ¤uft einfach die Liste der angemeldeten Clients durch, macht einen
 lock und wenn diese noch da sind werden sie informiert.
 
 Frage ist immer: welches Objekt muss im Speicher sein? Wenn andere nicht darauf bestehen, dass
@@ -366,11 +366,11 @@ das Objekt noch im Speicher ist, dann werden diese einen weak_ptr haben. Ansosnt
 Uniform Initialization = Brace Initialization
 
 Wann immer {} in Erscheinung treten haben wir es mit einer Initialisierung zu tun. Das gilt auch
-für Konstruktor-Aufruf.
-\{} : Initialisierung / gilt auch für Konstruktor-Aufruf
+fÃ¼r Konstruktor-Aufruf.
+\{} : Initialisierung / gilt auch fÃ¼r Konstruktor-Aufruf
 () : Methodenaufruf
 
-**Ergänzungen**  
+**ErgÃ¤nzungen**  
 `int n{};` ist das gleiche wie `int n = 0;`  
 `int n{1};`ist das gleiche wie `int n = 1;`  
 \{} ist die Vorbelegung mit dem Datentyp-spezifischen Nullwert.
@@ -397,12 +397,12 @@ TinyContainer tc2{ 1};
 ```
 Hier wird per Festlegung von c++ die initializer_list
 Implementierung aufgerufen.
-Möchte man die int-Implementierung aufrufen geht dies mit
+MÃ¶chte man die int-Implementierung aufrufen geht dies mit
 `TinyContainer tc2(1)` mit runden Klammern.
         
 
 # Range-based for Loop
-Mglk `for (size_t i = 0; i != vec.size(); ++i)` ist die einzige, die einem die völlige
+Mglk `for (size_t i = 0; i != vec.size(); ++i)` ist die einzige, die einem die vÃ¶llige
 Kontrolle gibt. Hier kann man alles machen: break, continue, adjust increment...
 
 **Index bei for_each**
@@ -415,12 +415,12 @@ nicht elementaren Datentypen verwenden
 # Structured Binding
 **std::pair mit sinnvollen Namen**
 Die Fkt `std::pair<int, int> divide_remainder(int dividend, int divisor) {}` liefert ein std::pair<int, int>.
-Mit `auto result = divide_remainder(16, 3);` erhält man result vom Typ std::pair<int, int>. Zugriff auf
-Quotient und Rest erhält man über _result.first_ bzw. _result.second_.
-Mit 'auto [quotient, remainder] = divide_remainder(20, 3);` kann man die Ergebnisse über deren
+Mit `auto result = divide_remainder(16, 3);` erhÃ¤lt man result vom Typ std::pair<int, int>. Zugriff auf
+Quotient und Rest erhÃ¤lt man Ã¼ber _result.first_ bzw. _result.second_.
+Mit 'auto [quotient, remainder] = divide_remainder(20, 3);` kann man die Ergebnisse Ã¼ber deren
 Namen _quotient_ und _remainder_ ansprechen.
 
-**Array mi Namen für die einzelnen Elemente**
+**Array mi Namen fÃ¼r die einzelnen Elemente**
 ```cpp
 int arr[] = { 10, 11, 12 };
 auto& [ a, b, c ] = arr;
@@ -437,12 +437,12 @@ std::get<2>(values);
 
 
 # Variant
-bei std::variant muss vorher festgelegt werden welche Datentype das sein können, z.B.
+bei std::variant muss vorher festgelegt werden welche Datentype das sein kÃ¶nnen, z.B.
 `std::variant<int, float, std::string> var{ 10.456f };`.
 Wenn das noch nicht feststeht muss man ein _std\:\:any_ verwenden.
 
 **generischer Besucher**
-wir müssen den Datentyp herausfinden -> decltype
+wir mÃ¼ssen den Datentyp herausfinden -> decltype
 ```cpp
 auto visitor = [](auto elem) {
     using ElemType = decltype(elem);
@@ -456,7 +456,7 @@ auto visitor = [](auto elem) {
 
 `using ElemType = decltype (elem)` entspricht `typedef decltype (elem) ElemType;`
 
-Will man das ganze universell auch für `auto& elem` machen : <a href=https://en.cppreference.com/w/cpp/header/type_traits>_Type traits_</a>
+Will man das ganze universell auch fÃ¼r `auto& elem` machen : <a href=https://en.cppreference.com/w/cpp/header/type_traits>_Type traits_</a>
 ```cpp
 using ElemTypeWithoutRef = std::remove_reference<ElemType>::type;
 
@@ -467,7 +467,7 @@ if (std::is_same<ElemTypeWithoutRef>, int>::value == true) {
 
 **Template-Spezialisierung**
 ```cpp
-//primäres Template
+//primÃ¤res Template
 template <class T>
 struct my_remove_reference {
     using type = T;
@@ -488,10 +488,10 @@ struct my_remove_reference<T&> {
 
 
 # [constexpr](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/ConstExpr/Constexpr.md)
-wenn eine Klassen-Fkt als friend deklariert ist, dann gehört die Fkt eigentlich nicht mehr
+wenn eine Klassen-Fkt als friend deklariert ist, dann gehÃ¶rt die Fkt eigentlich nicht mehr
 zur definierenden Klasse.
 
-Operatoren können in und außerhalb der Klasse implementiert werden.
+Operatoren kÃ¶nnen in und auÃŸerhalb der Klasse implementiert werden.
 ```cpp
 friend constexpr Complex operator+(const Complex& x, const Complex& y)
 {
@@ -500,8 +500,8 @@ friend constexpr Complex operator+(const Complex& x, const Complex& y)
     return Complex{ real, imag };
 }
 ```  
-Würde man hier friend weglassen, könnte man nicht _x_ und _y_ übergeben sondern nur einen der
-beiden. Für den zweiten würde man dann die Elemente von _this_ nutzen.  
+WÃ¼rde man hier friend weglassen, kÃ¶nnte man nicht _x_ und _y_ Ã¼bergeben sondern nur einen der
+beiden. FÃ¼r den zweiten wÃ¼rde man dann die Elemente von _this_ nutzen.  
 ```cpp
 constexpr Complex operator+(const Complex& x)
 {
@@ -516,19 +516,19 @@ ist die moderne Version des Makros. Durch das _()_ am Ende wird das constexpr La
 
 Das gleiche ist auch der Fall bei [CRC8-Bsp](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Lambda/Lambda01.cpp#L379)
 
-Mehr oder weniger alles was in C verfügbar ist kann als constexpr verwendet werden.
+Mehr oder weniger alles was in C verfÃ¼gbar ist kann als constexpr verwendet werden.
 
 
 # [UDL - User Defined Literal](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Literals/Literals.md)
-durch Überladung des Operators \"\" UND Syntax-Ergänzung für das Suffix (z.B. _kg, _km, _rgb).
+durch Ãœberladung des Operators \"\" UND Syntax-ErgÃ¤nzung fÃ¼r das Suffix (z.B. _kg, _km, _rgb).
 UDLs sollten einen \_ vorangestellt haben um diese von Literalen wie long, float,... unterscheiden
-zu können (z.B. 123467L, 12.3F)
+zu kÃ¶nnen (z.B. 123467L, 12.3F)
 
 Bsp: `Color operator"" _rgb (unsigned long long int value) {...}`  
-der Suffix, den wir haben wollen kommt nach dem \"\". Dann können wir z.B. Variablen wie
+der Suffix, den wir haben wollen kommt nach dem \"\". Dann kÃ¶nnen wir z.B. Variablen wie
 `Color red = 0xFF0000_rgb;` oder `Color abc = 123456_rgb` anlegen.
 
-UDLs erwarten den größtmöglichen Datentyp, hier z.B. long long. Ansonsten auch long double bzw. char*
+UDLs erwarten den grÃ¶ÃŸtmÃ¶glichen Datentyp, hier z.B. long long. Ansonsten auch long double bzw. char*
 
 
 # [Variadische Templates](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/VariadicTemplates/VariadicTemplates_01_Introduction.md)
@@ -554,11 +554,11 @@ void test_seminar() {
 }
 ```
 Normalerweise verwendet man bei den variadischen Templates immer zwei Funktionen
-(für den Fall, dass es nur noch einen Parameter gibt und den mit mehreren Par.).
+(fÃ¼r den Fall, dass es nur noch einen Parameter gibt und den mit mehreren Par.).
 
 
 Wozu? viele Hilfsfunktionen nehmen eine Variable Anzahl an Parametern entgegen. Diese
-nutzen variadische Templates. Als Beispiel hier eine mögliche Implementierung von
+nutzen variadische Templates. Als Beispiel hier eine mÃ¶gliche Implementierung von
 _std::make_unique()_:
 
 ```cpp
@@ -580,14 +580,14 @@ dann wird _my_make_unique()_ hier mit einer sogenannten Universal Reference aufg
 Doppeltes && ist bei Templates eine universal reference, keine rvalue refernce wie sonst.  
 Mehr dazu in [PerfectForwarding](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/PerfectForwarding/PerfectForwarding.md)
 
-Nicht ganz so schön wie mit einer universal reference ist auch die einfache Möglichkeit
+Nicht ganz so schÃ¶n wie mit einer universal reference ist auch die einfache MÃ¶glichkeit
 ```cpp
 std::unique_ptr <T> my_make_unique_01(const TArgs& ... args) {
     std::unique_ptr <T> ptr {new T{ args ... }};
     return ptr;
 }
 ```
-`std::forward` ist quasi der Bruder von `std::move`. Prüft ob lvalue; wenn, dann Referenz, sonst std::move
+`std::forward` ist quasi der Bruder von `std::move`. PrÃ¼ft ob lvalue; wenn, dann Referenz, sonst std::move
 
 
 ## Einschub: Kommaoperator
@@ -623,7 +623,7 @@ void my_test() {
 my_test();
 ```
 die Initializer-List dient nur dazu, den Pack auszupacken. Durch den Kommaoperator mit
-anschließender `0` wird hier erreicht, dass die `doSomething()` Fkt aufgerufen werden kann
+anschlieÃŸender `0` wird hier erreicht, dass die `doSomething()` Fkt aufgerufen werden kann
 obwohl sie vom type `void` ist.
 
 
@@ -638,9 +638,9 @@ Vermeiden einer nutzlosen Kopie wie bei
 ## [std::transform](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Transform/Transform.md)
 Umsetzen eines Containers _A_ auf einen Containern _B_
 v.a. hilfreich beim Arbeiten mit STL-Containern. Zum Kopieren des einen in den anderen
-Containers wird dies intern standard über den Index gemacht -> Größe muss vorher feststehen.
+Containers wird dies intern standard Ã¼ber den Index gemacht -> GrÃ¶ÃŸe muss vorher feststehen.
 
-Es ist auch möglich, das über `push_back()` zu machen: `std::back_inserter()`.
+Es ist auch mÃ¶glich, das Ã¼ber `push_back()` zu machen: `std::back_inserter()`.
 
 ohne `back_inserter`:
 ```cpp
@@ -683,8 +683,149 @@ std::transform(
     }
 );
 ```
-`std::back_inserter` verwendet intern einen `push_back` => die Daten werden hinten angehängt
+`std::back_inserter` verwendet intern einen `push_back` => die Daten werden hinten angehÃ¤ngt
 
 
 # Callable - [std::invoke](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Invoke/Invoke.md)
 
+
+
+
+
+LÃ¶sung fÃ¼r Bookstore
+
+#include <vector>
+#include <iostream>
+#include <variant>
+
+class Media {
+public:
+    friend class Book;
+    friend class Movie;
+
+    Media(std::string title, std::string author, float price, float amount) :
+        m_author(author), m_title(title), m_price(price), m_amount(amount) {}
+
+    virtual const float balance() = 0;
+    const float getPrice() { return m_price; };
+    
+    virtual void print() {
+        std::cout << m_title << " by " << m_author << "; " << m_amount << "*" << m_price << "â‚¬" << std::endl;;
+    }
+    
+private:
+    std::string m_author;
+    std::string m_title;
+    float m_price;
+    int m_amount;
+};
+
+class Book : Media {
+public:
+    Book(std::string title, std::string author, float price, float amount) :
+        Media(title, author, price, amount) {
+            std::cout << "we have a new movie" << title << ", " << amount << "*" << price << "â‚¬" << std::endl;
+        }
+
+    const float balance() override {
+        return m_price * m_amount;
+    }
+    
+    const float getPrice() { return Media::getPrice(); };
+    
+    void print() {
+        Media::print();
+    }
+};
+
+class Movie : public Media {
+public:
+    Movie(std::string title, std::string author, float price, float amount) :
+        Media(title, author, price, amount) {
+            std::cout << "we have a new book" << title << ", " << amount << "*" << price << "â‚¬" << std::endl;
+        }
+
+    const float balance() override {
+        return m_price * m_amount;
+    }
+    
+    const float getPrice() { return Media::getPrice(); };
+    
+    void print() {
+        Media::print();
+    }
+};
+
+template<typename T, typename U>
+class Bookstore {
+public:
+    Bookstore(std::vector<std::variant<T, U>> stock) : m_stock(stock) {}
+
+    Bookstore(std::initializer_list<std::variant<T, U>> stock) : m_stock(stock) {}
+
+    void addMedia(std::variant<T, U> item) {
+        m_stock.emplace_back(item);
+    }
+    
+    void listStock() {
+        auto visitor = [](auto&& arg) { 
+            arg.print();
+        };
+
+        std::cout << std::endl << "Stock" << std::endl;
+        for (auto item : m_stock) {
+            std::cout << "- ";
+            std::visit(visitor, item);
+        }
+        std::cout << std::endl;
+    }
+    
+    double totalBalance() {
+        auto visitor = [](auto&& arg) { 
+            //std::cout << arg.getPrice() << " ";
+            return arg.balance();
+        };
+
+        float sum = 0;
+        for (auto item : m_stock) {
+            sum += std::visit(visitor, item);
+            //sum += std::visit([](auto&& arg) { return arg.balance(); }, item);
+        }
+        return sum;
+    }
+
+    
+
+private:
+    std::vector<std::variant<Book, Movie>> m_stock;
+};
+
+
+int main() {
+    Book cBook { "C", "Dennis Ritchie", 11.99, 12 };
+    Book javaBook{"Java", "James Gosling", 17.99, 21 };
+    Book cppBook{"C++", "Bjarne Stroustrup", 16.99, 4 };
+    Book csharpBook{"C#", "Anders Hejlsberg", 21.99, 8 };
+
+    Movie movieTarantino{ "Once upon a time in Hollywood", "Quentin Tarantino", 6.99, 3 };
+    Movie movieBond{ "Spectre", "Sam Mendes", 8.99, 6 };
+
+    using MyBookstore = Bookstore<Book, Movie>;
+
+    MyBookstore bookstore = MyBookstore {
+        cBook, movieBond, javaBook, cppBook, csharpBook, movieTarantino
+    };
+    
+    std::cout << "Balance: " << bookstore.totalBalance() << std::endl;
+    
+    Book proCpp{ "Professional C++", "Marc Gregoire", 55.99, 1 };
+    Movie aMov{ "a movie", "whoever", 100, 10 };
+    bookstore.addMedia(proCpp);
+    bookstore.addMedia(aMov);
+
+    std::cout << "Balance: " << bookstore.totalBalance() << std::endl;
+
+    bookstore.listStock();
+    
+    return 0;
+}
