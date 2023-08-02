@@ -11,7 +11,9 @@ namespace Exercises_Generic_Lambdas {
         void testExercise_01_01() {
 
             // define a generic lambda
-            auto isGreaterThanFifty = [](const auto& n) { return n > 50; };
+            auto isGreaterThanFifty = [](const auto& n) { 
+                return n > 50; 
+            };
 
             std::vector<int> intValues{ 44, 65, 22, 77, 2 };
 
@@ -39,7 +41,7 @@ namespace Exercises_Generic_Lambdas {
             std::string getName() const { return m_name; }
 
             bool operator > (int age) const {
-                return m_age > age;
+                return this->m_age > age;
             }
         };
 

@@ -44,7 +44,7 @@ int main()
         //main_exercises();
         //main_expression_templates();
         //main_generate();
-        main_generic_lambdas();
+        //main_generic_lambdas();
         //main_keyword_explicit();
         //main_folding();
         //main_functional_programming();
@@ -87,7 +87,7 @@ int main()
         //main_template_specialization();
         //main_transform();
         //main_trim();
-        //main_tuple();
+        // main_tuple();
         //main_type_traits();
         //main_uniform_initialization();
         //main_unique_ptr();
@@ -95,7 +95,7 @@ int main()
         //main_variadic_templates_working_on_every_argument();
         //main_variadic_templates_sum_of_sums();
         //main_variadic_templates_mixins();
-        //main_variant();
+        main_variant();
         //main_virtual_base_class_destructor();
         //main_virtual_override_final();
         //main_weak_pointer();

@@ -54,8 +54,8 @@ namespace Exercises_MoveSemantics {
 
             // insert person into a collection
             std::vector<Person> persons;
-            persons.push_back(dagobert);
-            // persons.push_back(std::move(dagobert));
+           // persons.push_back(dagobert);
+            persons.push_back(std::move(dagobert));
 
             // print person again
             std::cout << "Person: " << dagobert << std::endl;
@@ -162,7 +162,7 @@ void test_exercises_move_semantics()
 {
     using namespace Exercises_MoveSemantics;
     Exercise_01::testExercise_01();
-    Exercise_02::testExercise_02();
+    // Exercise_02::testExercise_02();
 }
 
 // =====================================================================================

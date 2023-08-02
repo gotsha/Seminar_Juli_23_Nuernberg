@@ -16,8 +16,9 @@ namespace Exercises_Lambdas {
             }
         }
 
+        // Funktor
         struct Even {
-            void operator()(int val) const {
+            void operator() (int val) const {
                 if ((val % 2) == 0) {
                     std::cout << val << " is even." << std::endl;
                 }
@@ -31,7 +32,7 @@ namespace Exercises_Lambdas {
             functor (14);
 
             // testing lambda
-            auto lambdaEven = [](int val) {
+            auto lambdaEven = [] (int val) {
                 if ((val % 2) == 0) {
                     std::cout << val << " is even." << std::endl;
                 }

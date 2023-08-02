@@ -27,7 +27,7 @@ namespace SharedPointer {
     }
 
     // note: play with 'call-by-value' or 'call-by-reference'
-    void storeSharedPointer(std::shared_ptr<int> ptr) 
+    void storeSharedPointer(std::shared_ptr<int>& ptr) 
     {
         std::cout << "inner scope: " << ptr.use_count() <<  std::endl;
     }
@@ -37,7 +37,7 @@ namespace SharedPointer {
         // 'ptr1' is a shared pointer for a new instance of an int
         std::shared_ptr<int> ptr1{ new int{ 123 } };
         // or
-        // std::shared_ptr<int> ptr1{ std::make_shared<int>(123) };
+        std::shared_ptr<int> ptr11{ std::make_shared<int>(123) };
         // or
         // auto ptr1{ std::make_shared<int>(123) };
 

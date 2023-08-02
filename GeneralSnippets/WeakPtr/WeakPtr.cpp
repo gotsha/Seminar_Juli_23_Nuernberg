@@ -24,6 +24,7 @@ namespace WeakPointer {
         std::cout << std::boolalpha;
 
         std::cout << "Begin-of-program" << std::endl;
+
         std::weak_ptr<int> weakPtr;
 
         {
@@ -57,8 +58,11 @@ namespace WeakPointer {
         std::cout << "Is weak ptr expired:        " << weakPtr.expired() << std::endl;
 
         // Note: C++17 initializer syntax: limited variable scope
-        if (std::shared_ptr<int> ptr3; (ptr3 = weakPtr.lock()) == nullptr) {
-            std::cout << "Don't get the resource!" << std::endl;
+        {
+            std::shared_ptr<int> ptr3;
+            if ( (ptr3 = weakPtr.lock() ) == nullptr) {
+                std::cout << "Don't get the resource!" << std::endl;
+            }
         }
 
         std::cout << "End-of-program" << std::endl;
@@ -66,6 +70,7 @@ namespace WeakPointer {
 
     // =============================================================================
 
+    // Smell / Geruch
     class ParentNode;
     class RightNode;
     class LeftNode;
@@ -80,8 +85,8 @@ namespace WeakPointer {
 
     class ParentNode {
     private:
-        std::shared_ptr<RightNode> m_rightNode;   // <== shared or weak ?
-        std::shared_ptr<LeftNode> m_leftNode;     // <== shared or weak ?
+        std::weak_ptr<RightNode> m_rightNode;   // <== shared or weak ?
+        std::weak_ptr<LeftNode> m_leftNode;     // <== shared or weak ?
 
     public:
         ParentNode() {
@@ -131,6 +136,7 @@ namespace WeakPointer {
     void test_02()
     {
         std::shared_ptr<ParentNode> parent{ new ParentNode {} };
+
         std::shared_ptr<RightNode> rightNode{ new RightNode { parent } };
         std::shared_ptr<LeftNode> leftNode{ new LeftNode { parent } };
 
@@ -157,9 +163,9 @@ void main_weak_pointer()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     using namespace WeakPointer;
-    test_01();
+    //test_01();
     test_02();
-    test_03();
+    //test_03();
 }
 
 // =====================================================================================

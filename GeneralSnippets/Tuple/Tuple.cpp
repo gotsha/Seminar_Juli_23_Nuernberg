@@ -22,9 +22,12 @@ namespace TupleSamples {
 
         // accessing tuple values using std::get 
         std::cout << "The values of tuple are : ";
+
+        const int n = 1;
+
         std::cout 
             << std::get<0>(values) << " - " 
-            << std::get<1>(values) << " - " 
+            << std::get<n>(values) << " - "   // NIEEEEEEEEEEE
             << std::get<2>(values)
             << std::endl;
 
@@ -66,6 +69,8 @@ namespace TupleSamples {
 
         std::vector<Row> mySheet;
 
+        std::vector<std::tuple<int, char, double, std::string>> mySheet2;
+
         mySheet.push_back(row1);
         mySheet.push_back(row2);
         mySheet.push_back(row3);
@@ -99,6 +104,7 @@ namespace TupleSamples {
             << "Value: " << val << std::endl
             << "Name:  " << name << std::endl;
 
+        // Range Based Loop + Structured Binding
         for (const auto& [id, abbr, val, name] : mySheet) {
 
             std::cout 
@@ -139,7 +145,7 @@ namespace TupleSamples {
             << "Value: " << val << std::endl
             << "Name:  " << name << std::endl;
 
-        for (const auto& row : mySheet) {
+        for (const auto&  row : mySheet) {
 
             std::tie(id, abbr, val, name) = row;
 

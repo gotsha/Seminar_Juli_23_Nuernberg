@@ -152,3 +152,283 @@ b) Lambda Funktionen: :  Aufgabe 1
 
 c) Generische Lambda Funktionen: :  Aufgabe 1
 
+Empty Project :)
+
+=======================================================================
+
+Smart Pointer:
+--------------
+
+Worum geht es ???
+
+int* ip;
+
+ip = new <========  Speicher  // Heap
+
+..........
+
+delete !!!
+
+i)  delete ip;      Scalar delete // new Point;
+
+ii) delete[] ip;    Non-Scalar delete:  new Point [n]; 
+
+Frage:  ii) ===>  delete ip;
+
+UB:  undefined behaviour 
+
+Wer ruft delete auf ???
+
+"Dieses wird halt vergessen"   ==> Leak
+
+Ja, das OS verwaltet den Speicher (  Prozessen )
+
+new / delete: Im Kontext eines Prozesses
+
+Idee:
+
+a) Pointer ===>  Hüllenklasse / Hüllenobjekt
+
+b) OO / Klassen:   Konstruktoren / Destruktoren
+
+c) Wann wird ein Destruktor aufgerufen:  deterministisch !!!
+
+   i) Global
+   ii) Lokal  ( Stack )  <======== Am Ende des Blocks wird der Destruktor aufgerufen
+   iii) Dynamisch ( new / delete )
+
+d) Ansatz:  
+
+   i) Man legen den Pointer in einem Hüllenobjekt ab
+   ii) Man platziere den Aufruf des delete im Destruktor
+
+   ==> Lokal:  der delete wird am Ende des Blocks deterministisch aufgerufen.
+
+e) Optionen: Hüllenobjekte sind über Funktionsgrenzen transportierbar.
+
+
+A) Realisierung:  auto_ptr:   deprecated
+
+B) 3 Smart-Pointer:
+
+   std::unique_ptr
+   std::shared_ptr
+   std::weak_ptr
+
+Unterschiedliche Strategien:
+
+std::unique_ptr:
+
+  Zu einem Zeitpunkt im Programm kann es NUR EINEN BESITZER eines
+  std::unique_ptr Objekts geben.
+
+std::shared_ptr
+
+  Zu einem Zeitpunkt im Programm kann es MEHRERE BESITZER eines
+  std::shared_ptr Objekts geben.
+
+  std::weak_ptr gehört zum Repertoire des std::shared_ptr.
+
+
+
+
+  ==============================================
+
+  Copy - Elision:
+
+  to elide ==> auslassen, weglassen, ....
+
+  Optimierungs-Technik:
+
+    ==============================================
+
+a) Habe ein std::shared_ptr Objekt angelegt!
+
+b) this
+
+c) Hmn, kann ich den this-Zeiger weiterreichen ... Pointer
+
+    Zu hinterfragen ... eher nein
+
+d) What's the problem: Ich reiche ein std::shared_ptr(this) weiter
+
+   SO GEHT DAS NICHT
+
+e) Da gibt es eine UNterstützung:
+
+   std::shared_from_this
+
+Beispiel:
+
+class Observer : public std::enable_shared_from_this<Observer> {
+
+CRTP ==>  Curious
+
+Dann geht folgendes innerhald der Klasse Observer:
+
+std::shared_ptr<Observer> me{ shared_from_this() };
+
+Das ist quasi ein Shared_Pointer von THIS
+
+STOLPERFALLE // VORSICHT !!!!!!!!!!!!!!!!!!!!
+
+Hmm: Ich legen den 'me'  // std::shared_ptr<Observer> 
+
+     gleich im Konstruktor der Klasse Observer an.
+
+     NIEEEEEEEEEEEEEEEEEEEEEEEEEEEEMALS
+
+     Den dazugehörigen Control Block gibt es noch nicht.
+
+===============================================================
+
+Es gibt noch ein kleines Problem:
+
+Der std::shared_ptr funktioniert nicht immer :-(((((((((
+
+===============================================================
+
+Der std::shared_ptr ist in der Regel nur mit
+dem std::weak_ptr zu gebrauchen.
+
+a) Technik des std::weak_ptr
+b) Wozu, wann, ...
+
+===============================================================
+
+Moral von dieser Geschichte:
+
+a) Nicht ausschließlich std::shared_ptr verwenden.
+
+b) Verwenden, wenn das Objekt BENÖTIGT wird.
+
+c) Andere Programmteile, die das Objekt nur "passiv" verwenden wollen:
+
+   std::weak_ptr ausgestattet werden.
+
+d) SW: Gewisse Flexibilität vorhanden sein:
+
+   Zugang zum Objekt via lock.
+   
+   Rückgabe == nullptr: Don't care.
+
+BEISPIEL:
+
+Observer - Pattern:
+
+a) Source: Diese wird beobachtet 
+   
+    (( Liste von Beobachtern ))
+
+b) Beobachter:  Clients, die sich für Änderungen an der Source interessieren.
+
+i)  Prinzipiell: ALLE Objekte werden via shared_ptr angelegt.
+
+ii) Wie werden Clients der Source bekannt gemacht:
+
+    Via weak_ptr: lock // nullptr
+
+====================================================
+
+Fazit:  "Go for Smart Pointer"
+
+====================================================
+
+Initialisierung:
+
+========>  Überarbeitung.
+
+========>  Kein Bruch zu alter SW.
+
+() :  Methodenaufruf
+{} :  Vorbelegung
+
+Strikt: 
+
+Uniform Initialization // Brace Initialization:
+
+{}:  Initialisierung  / Gilt auch für KONSTRUKTOR Aufruf
+() : Methodenaufruf
+
+Hübscher // Kleine Ergänzungen.
+
+=======================================================
+
+std::vector:            Daten liegen auf dem Heap  (new)
+
+std::initializer_list:  Daten liegen auf dem Stack  (NO new)
+
+Achtung:
+
+std::initializer_list  ist kein "vollwertiger" STL-Container
+
+Hilfscontainer
+
+Light-Weigt Container
+
+==========================================================
+
+std::vector:            Daten liegen auf dem Heap  (new)
+std::initializer_list:  Daten liegen auf dem Stack (NO new)
+
+std::string:            Daten liegen auf dem Heap  (new)
+std::string_view:       Daten liegen nicht auf dem Heap (NO new)
+
+std::array:             Daten liegen auf dem Heap oder Stack
+std::span:              Daten sind bereits vorhanden
+
+Utility-Klassen
+
+==========================================================
+
+   std::tuple:
+
+   Ein Tuple ist wie eine Struct für Schreibfaule
+
+==========================================================
+
+Variant  // Any
+
+std::variant
+
+Ähnlich - aber nur - zu union:
+
+Ist ein Objekt, dass Daten unterschiedlichen Typs enthalten kann.
+Zu einem Zeitpunkt nur eine Variable.
+
+Beispiel:
+
+Excel / Sheets:  Zelle / Cell:  Number, string, Date, double, 
+
+Game Programming:  Board:  Figure:  Pro Board Slot eine andere Figur.
+
+=================================================================
+
+Betrachung von Datentypen:
+
+Reflection   // Java oder C#
+
+Type Traits  // Typ Spuren 
+
+Analyse von Datentypen.
+
+Zur Übersetzungs- oder zur Laufzeit ????????????????????
+
+A) Geht zur Laufzeit -- mit Konsequenzen
+
+B) Geht zur Übersetzungszeit:  mit constexpr
+
+
+=================================================================
+
+Aufgaben zu Smart Pointer: 1, 2 und 4
+
+Aufgaben zu STL-Algorithmen: Aufgabe 2
+
+Fibonacci:
+
+std::vector <int> zahlen (20);   // Vektor hat die Länge 20
+
+std::generate ( zahlen.begin(), zahlen.end(),  [] () {   }     )  ;
+
+=================================================================
