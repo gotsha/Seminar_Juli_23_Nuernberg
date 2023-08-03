@@ -1,4 +1,4 @@
-# RValue - LValue
+# [RValue - LValue](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/RValueLValue/RValueLValue.md)
 ```cpp
 int n;
 int *ip;
@@ -30,7 +30,7 @@ LValue und RValue aus C. (C ist in C++ komplett (zu 99%) enthalten)
 
 `std::move` ist keine Fkt sondern ein cast
 
-# Move Semantics
+# [Move Semantics](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/MoveSemantics/MoveSemantics.md)
 new Anweisung entspricht malloc in C
 ```BigData::BigData(const BigData& data) {} //das ist der copy Constructor. 
 vec.push_back(BigData(10, 1)); //dadurch wird ein temporäres Objekt angelegt; dieses wird danach auch wieder freigegeben -> destructor
@@ -55,7 +55,7 @@ auch hier dyn Speicherverwaltung möglich: reserve => initialer Speicher
 
 in C++ liegt ein `std::vector<int> vec;` auf dem Stack, der räumt sich von allein auf. Zusätzlich gibt es den heap. In Java gibt es nur den heap.
 
-# auto
+# [auto](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Auto/Auto.md)
 Funktionen mit RÜckgabewert auto: Rückgabewerte in der Fkt müssen übereinstimmen
 ```cpp
 auto tueWas(bool flag, float f1, double d1) {
@@ -111,9 +111,8 @@ auto wird häufig mit Referenz-Keyword & verwendet um unbeabsichtigte Kopien zu v
    
 const Schlüsselwort wird verwendet wenn möglich da der Compiler solche Objekte effizienter übersetzt.
 
-# Lambdas
 
-
+# [Lambda](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Lambda/Lambda.md)
 ```cpp
 // STL Container
 std::vector<int> vec(10);
@@ -172,20 +171,23 @@ std::generate(
     beleger
 );
 ```
-static int i => globale Variable die aber nur in der definierenden Funktion angesprochen werden kann.
+`static int i` => globale Variable die aber nur in der definierenden Funktion angesprochen werden kann.
 
 Ein Lambda ist ein Funktor.
-_std::begin(vec)_ ist die 'modernere' Schreibweise von vec.begin()
+`std::begin(vec)` ist die 'modernere' Schreibweise von `vec.begin()`.
 
 lokale Funktionen sind in C++ nicht erlaubt, lokale Klassen schon
-Der Aufruf `std::sort(std::begin(vec), std::end(vec), LocalComparer{});` aus Lambda01.cpp entspricht schon einem Lambda. Nur noch anders geschrieben.
+Der Aufruf `std::sort(std::begin(vec), std::end(vec), LocalComparer{});` aus
+[Lambda01.cpp](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Lambda/Lambda01.cpp) entspricht schon einem Lambda. Nur noch anders geschrieben.  
 Lambda wäre dann
 `std::sort(std::begin(vec), std::end(vec), [] (int n1, int n2) { return n1 < n2; });`
+
 Ein Lambda/Eine Lambda-Funktion (eigentlich ein schlechter Name) ist ein Ojekt (Instanz einer Klasse)!!!!! keine Funktion
 
-Funktionsaufrufe bei elementaren Datentypen, z.B. compare(int n1, int n2) by value machen (da ist es aufwändiger für den Prozessor mit Referenzen zu arbeiten). Andere Typen by reference um Kopien zu vermeiden
+Funktionsaufrufe bei elementaren Datentypen, z.B. `compare(int n1, int n2)` by value machen (da ist es aufwändiger für den Prozessor mit Referenzen zu arbeiten).
+Andere Typen by reference um Kopien zu vermeiden
 
-Wenn man jetzt wiedre das Flag mit reinbringen möchte:
+Wenn man jetzt wieder das Flag mit reinbringen möchte:
 `std::sort(std::begin(vec), std::end(vec), [flag = true] (int n1, int n2) { return (flag) ? n1 < n2 : n1 > n2; });`
 flag wird hier ohne Datentyp angegeben da durch die Vorbelegung automatisch definiert.
 
@@ -253,7 +255,7 @@ auto l4 = [=, &m] { // alle als Kopie außer die genannten
 Der Datentyp von lambda ist ein std::function
 
 
-# Generische Lambda Ausdrücke
+# [Generische Lambda Ausdrücke](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/GenericLambdas/GenericLambdas.md)
 
 
 # Smart Pointer
@@ -265,27 +267,27 @@ delete ip; // was passiert dann? UB - undefined behaviour
 für jedes _new_ muss auch ein _delete_ aufgerufen werden.
 
 
-## std::unique_ptr - Zu einem Zeitpunkt nur EIN BESITZER
+## [std::unique_ptr - Zu einem Zeitpunkt nur EIN BESITZER](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/UniquePtr/UniquePtr.md)
 es existiert ein .get() um den hinter dem unique_ptr liegenden Zeiger zu gelangen.
 
 Mit _std::move_ kann der unique_ptr weitergereicht werden. 
 
-### Programm _test_01()_
+### Programm [test_01()](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/UniquePtr/UniquePtr.cpp#L46)
 am Ende des Scopes werden die Destruktoren aufgerufen
 und in diesem Bsp werden die Pointer ptr1..3 gelöscht.
 
-### Programm _test_02()_
-beim Debuggen hat _ptr_ noch in der Zeile 
+### Programm [test_02()]https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/UniquePtr/UniquePtr.cpp#L80)
+beim Debuggen hat `ptr` noch in der Zeile 
 ```cpp
 std::unique_ptr<int> ptr{ loadUniquePointer() };
 ```
-eine Adresse und den Wert 100. Noch bevor _loadUniquePointer()_ den ptr zurückgibt.
+eine Adresse und den Wert 100. Noch bevor `loadUniquePointer()` den `ptr` zurückgibt.
 => copy - Elision
-Der Compiler erkennt, dass _loadUniquePointer()_ den passenden Typ zurückgibt und optimiert
+Der Compiler erkennt, dass `loadUniquePointer()` den passenden Typ zurückgibt und optimiert
 das. Ergebnis wird zurück in Rückgabeslot der aufrufenden Funktion kopiert.
 (s. CopyMoveElision bei den cpp_modern_examples)
 
-_storeUniquePointer(std::unique_ptr<int>& ptr)_ muss Referenz bekommen; andernfalls wäre
+`storeUniquePointer(std::unique_ptr<int>& ptr)` muss Referenz bekommen; andernfalls wäre
 das Programm nicht übersetzungsfähig.
 
 ```cpp
@@ -307,7 +309,7 @@ void test_02()
 Das funktioniert nicht, da am Ende von storeUniquePointer() ptr2 vom Destructor gelöscht wird.
 
 
-## std::shared_ptr - geteilter Besitz
+## [std::shared_ptr - geteilter Besitz](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/SharedPtr/SharedPtr.md)
 enthält Zähler. Zweiter Speicher für Pointer, CB _control block_ der die Adresse und den
 Zähler enthält. Der Zeiger auf dem Stack zeigt auf diesen Speicher am heap.
 Wenn der Zähler von shared-Pointern durch die Destruktoren beim Löschen der Pointer
@@ -327,24 +329,24 @@ Man arbeitet normalerweise nicht alleine mit dem std::shared_ptr sondern zusamme
 std::weak_ptr
 
 
-## std::weak_ptr
-### test_01
+## [std::weak_ptr](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/WeakPtr/WeakPtr.md)
+### Programm [test_01](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/WeakPtr/WeakPtr.cpp#L23)
 ```cpp
 std::shared_ptr<int> ptr2{ weakPtr.lock() };
 if (ptr2 != nullptr) {...}
 ```
-durch .lock() kann aus einem weak_ptr, einem schwachen Zeiger, ein starker Zeiger gemacht werden.
+durch `.lock()` kann aus einem `weak_ptr`, einem schwachen Zeiger, ein starker Zeiger gemacht werden.
 Das funktioniert jedoch nicht immer -> nullptr check.
 Wenn wir den nullptr zurückbekommen wissen wir, dass der Datensatz im Speicher nicht mehr
 vorhanden ist.
 
-Im Code arbeiten wir ausschließlich mit starken Zeigern -> wir machen nicht *weakPtr um den Wert
-bekommen sondern *ptr2
+Im Code arbeiten wir ausschließlich mit starken Zeigern -> wir machen nicht `*weakPtr` um den Wert
+zu bekommen sondern `*ptr2`.
 
 ### test_02
 Forward declaration => riecht immer nach möglichen Problemen
 Problem bei test_0 ist, dass die Destruktoren nicht aufgerufen werden. Warum? Übungsaufgabe > SmartPointer >
-<a href="https://github.com/gotsha/cpp_modern_examples/blob/master/GeneralSnippets/Exercises/Exercises_15_SmartPointers.md#aufgabe-3-beobachtungen-eines-zyklus-von-smart-pointer-objekten">Aufgabe 15-3</a>
+[Aufgabe 15-3](a href="https://github.com/gotsha/cpp_modern_examples/blob/master/GeneralSnippets/Exercises/Exercises_15_SmartPointers.md#aufgabe-3-beobachtungen-eines-zyklus-von-smart-pointer-objekten)
 Verweisen auf sich selbst mit std::shared_ptr -> selbst bei Verlassen des Scopes bleiben diese erhalten,
 sie sind jedoch nicht mehr erreichbar.
 Wenn m_rightNode und m_leftNode jedoch als std::weak_ptr definiert sind
@@ -361,7 +363,7 @@ Frage ist immer: welches Objekt muss im Speicher sein? Wenn andere nicht darauf 
 das Objekt noch im Speicher ist, dann werden diese einen weak_ptr haben. Ansosnten einen shared_ptr.
 
 
-# Initialisierung
+# [Initialisierung](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/DefaultInitialization/DefaultInitialization.md)
 
 Uniform Initialization = Brace Initialization
 
@@ -376,7 +378,7 @@ für Konstruktor-Aufruf.
 \{} ist die Vorbelegung mit dem Datentyp-spezifischen Nullwert.
 
 
-# std::initializer_list
+# [std::initializer_list](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/InitializerList/InitializerList.md)
 |Vergleich|
 |---|
 | std::vector | Daten liegen auf dem Heap (new) |
@@ -835,6 +837,181 @@ Enhält als Infos den Zeiger auf den Anfang und die Länge.
 Bei _test_02_ aus _StringView.cpp_ wird aufgrund der Länge beim konkatinieren die stringview umkopiert
 
 
+# [Parallel Programming](https://github.com/pelocpp/cpp_parallel_programming)
+```cpp
+std::thread t{...};
+```
+
+`t.join()` ist blocking; weitere Programmausführung wartet auf die Beendigung des Threads  
+`t.detach` non-blocking; => starten weiterer Threads möglich
+
+[test_03](https://github.com/pelocpp/cpp_parallel_programming/blob/master/Programs/01_SimpleThreading/SimpleThreading_02.cpp#L65)
+Wenn man die Threads parallel laufen lassen möchte: `t.join()` durch `t.detach()` ersetzen.
+Wenn im Lambda anstelle von kopierendem Zugriff auf value und iterations `[=]` mittels Referenz darauf zugegriffen würde `[&]`,
+dann würde das schief gehen wenn der Scope veralssen wird.  
+Bei parallel programming keine Referenzzugriffe!
+
+Ressourcen des Threads werden freigegeben, wenn der Thread zu Ende ist.
+
+
+## [Mutual Exlusion - std::mutex](https://github.com/pelocpp/cpp_parallel_programming/blob/master/Programs/03_MutualExclusion/Readme.md)
+[Simple_Mutex](https://github.com/pelocpp/cpp_parallel_programming/blob/master/Programs/03_MutualExclusion/Simple_Mutex.cpp)
+
+Das Problem ist bei der Ausgabe, dass `std::cout` in
+[Z. 37](https://github.com/pelocpp/cpp_parallel_programming/blob/master/Programs/03_MutualExclusion/Simple_Mutex.cpp#L37)
+global ist und von allen geteilt wird  
+=> `s_mutex.lock()` vor und `s_mutex.unlock()` nach dem `std::cout << ...`.
+
+`lock()` und `unlock()` sind kritisch, da es zwingend nötig ist nach einem
+`lock()` auch wieder einen `unlock()` aufzurufen.
+
+Mutex ist nichts, was von c++ kommt, das ist vom Betriebssystem. Nur dieses kann erkennen,
+dass auf eine Resource aus mehreren Threads zugegriffen werden möchte.
+
+Dazu muss mutex auch static sein `static std::mutex s_mutex`.
+
+
+## std::scoped_lock
+Anstelle von 
+```cpp
+s_mutex.lock();
+std::cout << "Counter " << m_id << ": i= " << i << std::endl;
+s_mutex.unlock();
+```
+kann man machen
+```cpp
+std::scoped_lock raii { s_mutex };
+std::cout << "Counter " << m_id << ": i= " << i << std::endl;
+```
+Das Prinzip hinter der Variable raii heißt [RAII](https://github.com/pelocpp/cpp_design_patterns/blob/master/Patterns/RAII_Idiom/Resources/Readme.md) (Resource Acquisition Is Initialization).
+Bei raii wird im Constructor `s_mutex.lock()` und im Destructor `s_mutex.unlock()` aufgerufen.
+Sobald der Scope des Objekts raii verlassen wird erfolgt das Freigeben also völlig automatisch.
+
+Beispiel zur RAII konformer Programmierung: [CodeConverter](https://github.com/pelocpp/cpp_case_studies/blob/master/CaseStudies/CodeConverter/CodeConverter.cpp)
+
+
+## Thread Pools
+Threads sind alt und kompliziert. Moderner: ThreadPools.
+
+Die Betriebssystemfkt `createThread()` allokiert Speicher im Betriebssystem.
+Zudem muss es diese releast werden bevor der Thread wieder verwendet werden kann.
+
+Aus C++ können Windows ThreadPools angesprochen werden: `std::async`.
+In [cppreference](https://en.cppreference.com/w/cpp/thread/async) heißt es:
+_The function template std::async runs the function f asynchronously (potentially
+in a separate thread which might be a part of a thread pool)_  
+Man muss somit für jedes Betriebssystem prüfen ob der `std::async` auch wirklich mit einem ThreadPool arbeitet
+
+`std::future` arbeitet zusammen mit ThreadPool und bietet Rückgabewerte
+
+
+## [std::async + std::future](https://github.com/pelocpp/cpp_parallel_programming/tree/master/Programs/04_Async)
+`.get()` Funktion von `std::future` blockiert bis Thread fertig ist und liefert dann
+an der aufrufenden Stelle das Ergebnis.
+
+Man muss future-Objekte irgendwohin moven um deren Ergebnisse auch nachher noch zu erhalten.
+
+
+## [std::promise](https://github.com/pelocpp/cpp_parallel_programming/blob/master/Programs/05_FuturesPromises/Readme.md)
+bei `std::thread` ist die Thread-Prozedur `void`.  Um dennoch einen Rückgabewert zu erhalten können wir es
+zusammen mit `std::promise` und `std::future` verwenden (s. [Future_01](https://github.com/pelocpp/cpp_parallel_programming/blob/master/Programs/05_FuturesPromises/Future_01.cpp))
+
+Ich muss dem Thread das promise-Objekt als Referenz übergeben. Hier müssen wir sicherstellen, dass es keine
+Kopien eines Promise gibt:
+```cpp
+void doWorkVersion01(std::promise<int>* promise) {
+    ...
+}
+std::thread t { doWorkVersion01, &promiseObj };
+```
+
+Ansonsten kann man dem Thread wie das `promiseObj` auch mittels `std::move(promiseObj)` übergeben
+```cpp
+void doWorkVersion02(std::promise<int>&& promise) {
+    ...
+}
+std::thread t{ doWorkVersion02, std::move (promiseObj) };
+```
+
+Promise bietet `->setValue(...)`. Dieses kann anschließend über `futureObj.get()` wieder ausgelesen werden
+
+
+## [std::latch](https://github.com/pelocpp/cpp_parallel_programming/blob/master/Programs/09_LatchesBarriers/Latches.cpp)
+Wenn wir keinen latch haben können wir anstelle von `done.wait()` auch `tasks.clear()` verwenden um auf
+das Ende aller Berechnungen warten zu können.
+
+## std::sort mit Parallelisierung
+seit C++ 17 unterstützt [`std::sort`](https://en.cppreference.com/w/cpp/algorithm/sort) die Parallelisierung
+über einen zusätzlichen Parmeter [_ExecutionPolicy_](https://en.cppreference.com/w/cpp/algorithm/execution_policy_tag_t).
+
+
+# [Folding](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Folding/Folding.md)
+C++ 11
+```cpp
+template <typename T>
+T adder(T value) {
+    return value;
+}
+template <typename T, typename ... TRest>
+T adder(T value, TRest ... values) {
+    auto result = value + adder(values ...);
+    return value;
+}
+
+void test_seminar() {
+    int result = adder(1, 2, 3, 4, 5);
+}
+```
+
+mit Folding:
+```cpp
+template <typename ... TRest>
+auto adder(TRest ... values) {
+    auto result = ( ... + values ); //muss in runden Klammern stehen
+    return value;
+}
+```
+
+## Folding für thread-Sicheres cout von mehreren Parametern
+[Logger](https://github.com/pelocpp/cpp_parallel_programming/blob/master/Programs/Logger/Logger.h)  
+Da in [Zeile 37](https://github.com/pelocpp/cpp_parallel_programming/blob/master/Programs/Logger/Logger.h#L37)
+nur ein stringstream Objekt an `std::cout` übergeben wird, wird diese Ausgabe nicht unterbrochen
+
+
+# [Concepts](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/ConceptsRequiresFunctions/ConceptsRequiresFunctions.md)
+Man muss mit Konzepten bei Template-Funktionen nicht mehr `typename` schreiben sondern kann dies durch den Namen
+des Konzepts ersetzen. 
+Zudem ist es bei Template-Funktionen möglich diese `auto` und ganz ohne `template...` zu definieren
+```cpp
+auto add(Numerical auto a, Numerical auto b) {
+    return a + b;
+}
+```
+
+Bei [Klassen](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/ConceptsRequiresClasses/ConceptsRequiresClasses.md)
+gibt es nur eine Möglichkeit:
+```cpp
+template <typename T>
+concept Number = std::integral<T> || std::floating_point<T>;
+
+template <typename T>
+requires Number<T>
+class WrappedNumber {
+    ...
+}
+```
+
+Bei den [Exercises 17](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Exercises/Exercises_17_Concepts.cpp)
+finden sich auch Möglichkeiten das für variadische Template-Funktionen zu nutzen, z.B.
+```cpp
+template<typename ... TArgs> 
+    requires(std::same_as<TArgs, bool> &&  ...)
+bool andAll(TArgs ... args) {
+    return ( ... && args);
+}
+```
+
+
 # Sonstiges
 
 ## einzelne Compiler-Warnung disablen
@@ -853,3 +1030,10 @@ Beispielen enthalten ist soll die Warnung deaktiviert werden
 
 # Follow-Up
 Code-Segment vs. Data-Segment???
+
+anstatt `reinterpret_cast` gibt es auch `std::is_base_of` oder `std::derived_from`. Diese beiden werden
+allerdings zur Kompilierzeit festgelegt und nicht zur Runtime im heap.
+
+[Blog](www.peterloos.de) von Peter Loos  
+Da finden sich auch Übungen...
+Dieser ist v.a. auch für seine Studenten
