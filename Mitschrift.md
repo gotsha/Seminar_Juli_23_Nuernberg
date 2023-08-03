@@ -486,6 +486,7 @@ struct my_remove_reference<T&> {
     };
 ```
 
+`std::visit` kann auch einen Rückgabewert liefern; dazu einfach im Lambda einen Return machen
 
 # [constexpr](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/ConstExpr/Constexpr.md)
 wenn eine Klassen-Fkt als friend deklariert ist, dann gehört die Fkt eigentlich nicht mehr
@@ -686,5 +687,169 @@ std::transform(
 `std::back_inserter` verwendet intern einen `push_back` => die Daten werden hinten angehängt
 
 
+## [std::any](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Any/Any.md)
+Der Partner von `std::variant`.
+A `variant` can be _visited_, an `any` not.
+A `variant` does not use additional heap memory.
+
+
+## [std::optional<int>](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Optional/Optional.md)
+enthält ein flag ob die Variable wirklich einen Wert hat:
+```cpp
+std::optional<int> someValue;
+if (someValue.has_value()) {
+    ...
+}
+//andere Mglk:
+if (someValue) {
+    ...
+}
+someValue = std::nullopt; //reset
+```
+
+Wertzugriff erfolgt über `someValue.value()` oder `*someValue`.
+
+
+## [std::array](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Array/Array.md)
+Vorteile von `std::array<int, 100> zahlen` vs. `int numbers[100]` ?  
+Funktion die ein Array übergeben bekommt
+```cpp
+print(ip* anfang, int len) {} // z.B. print(numbers, 100) => Stichwort array decay
+// vs.
+print(zahlen) {}
+
+template<typename T, int Length>
+void print(const std::array<T, Length>& array) {
+    std::cout << "Length: " << array.size() << std::endl;
+}
+```
+Das Problem ist hierbei aber, dass bei arrays verschiedener Längen, für jede Version
+die Funktion neu kompiliert wird => [std::span](#std_span)
+
+CTAD: Class Template Argument Deduction  
+`std::array array1{ 9.7, 7.31 };` => `std::array<double, 2>`  
+Problem:  
+`std::array array3{ "Hello C++ 20" };` => `std::array<const char*, 1>`  
+für string:
+`std::array array3{ "Hello C++ 20"s };`
+
+`.at()` Operator => enthält exception handling (auf Kosten von Laufzeit)
+
+Vergleich von zwei Arrays  
+Bei C-Arrays funktioniert `bool isEqual = (cArray == cArray2);` nicht, da Adressen
+verglichen werden. Bei `std::array` hingegen wird Inhalt verglichen.
+
+Rückgabewert vom Typ Array  
+Bei C-Arrays wird die Adresse einer (u.U. lokalen) Variablen zurückgegeben und es gibt eine Warnung.  
+`std::array`s hingegen geben wirklich das Array zurück
+
+
+## <a name="std_span">[std::span](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Array/Array.md)</a>
+Mit `std::span` lassen sich Adresse und Länge von C-Arrays und auch Vektoren an eine andere Fkt übergeben.  
+Bps:
+```cpp
+void printSpan(std::span<int> values) {
+    ...
+}
+int cArray[]{ 1, 2, 3, 4, 5 };
+printSpan(cArray);
+```
+
+
 # Callable - [std::invoke](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Invoke/Invoke.md)
 
+# zur Bookstore-Übung
+Keyword: Ducktyping
+
+```cpp
+template <typename ... Media>
+class Bookstore
+{
+private:
+    usint SimpleStock = std::vector<std::variant<Book, Movie>>;
+    using Stock = std::vector<std::variant<TMedia ...>>;
+    using StockList = std::initializer_list<std::variant<TMedia ...>>;
+
+public:
+    explicit Bookstore(StockList stock) : m_stock{ stock } {}
+    //template member methond // T == Einen der Typen von TMedia
+    template <typename T>
+    void addMedia(const T& media) {
+        std::variant<TMedia ...> tmp {media};
+        m_stock.push_back(tmp);
+        
+        m_stock.push_back(media);
+    }
+
+}
+
+    
+using MyBookstore<Book, Movie>
+using MyBookstore2<Book, Movie, CD>
+```
+
+
+# [CRTP - Curiously Recurring Template Pattern](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/CRTP/CRTP.md)
+
+
+# [C++20 - Module](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/Modules_Import/Modules_Import.md)
+neue Endung _.ixx_ für Module.
+Diese Datei wird als _Definition_ des Moduls aufgefasst; sie muss nicht deren Impleentierung enthalten.
+
+Bsp: in _.ixx_ sind nur die exports erwähnt: _Module_Varian.ixx_
+```cpp
+export module modern_cpp:variant;
+
+import std;
+
+export void main_variant();
+```
+
+In der zugehörigen _.cpp_ gibt es dann u.a.
+```cpp
+module modern_cpp:variant;
+
+namespace VariantDemo {
+
+    void test_01() { ... }
+}
+
+void main_variant()
+{
+    using namespace VariantDemo;
+    test_01();
+}
+```
+
+
+# [Small String Optimization (SSO)](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/SSO/SSO.md)
+automatische Optimierung kurzer `std::string`s.
+
+
+# [String View](https://github.com/gotsha/Seminar_Juli_23_Nuernberg/blob/master/GeneralSnippets/StringView/StringView.md)
+Vorteil gegenüber `std::string`: Liegt im Stack, nicht im heap.
+
+Diese Hilfsklasse kapselt einen `const char*`.  
+Enhält als Infos den Zeiger auf den Anfang und die Länge.
+
+Bei _test_02_ aus _StringView.cpp_ wird aufgrund der Länge beim konkatinieren die stringview umkopiert
+
+
+# Sonstiges
+
+## einzelne Compiler-Warnung disablen
+Hier am Bsp von zwei C-Arrays die verglichen werden sollen. Aber da dies absichtlich in den
+Beispielen enthalten ist soll die Warnung deaktiviert werden
+```cpp
+#pragma warning(push) //immer push und am Ende pop nötig zum disablen der Warnung
+#pragma warning(disable : 5056)
+
+    // Worse: operator== compiles, but does the "wrong" thing: address comparison!
+    bool isEqual = (cArray == other);
+
+#pragma warning(pop)
+```
+
+
+# Follow-Up
+Code-Segment vs. Data-Segment???
