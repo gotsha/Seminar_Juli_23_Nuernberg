@@ -14,7 +14,11 @@ namespace ConstExprComplex {
 
     public:
         // c'tors
-        constexpr Complex() : m_real{ }, m_imag{ } {}
+        constexpr Complex() : m_real{ }, m_imag{ } 
+        {
+            // std::cin >> m_real;
+        }
+
         constexpr Complex(float real, float imag) : m_real{ real }, m_imag{ imag } {}
 
         // getter
@@ -22,13 +26,15 @@ namespace ConstExprComplex {
         constexpr float imag() const { return m_imag; }
 
         // operators
-        friend constexpr Complex operator+(const Complex& x, const Complex& y)
-        {
-            float real = x.real() + y.real();
-            float imag = x.imag() + y.imag();
-            return Complex{ real, imag };
-        }
+        friend constexpr Complex operator+(const Complex& x, const Complex& y);
     };
+
+    constexpr Complex operator+(const Complex& x, const Complex& y)
+    {
+        float real = x.m_real + y.m_real;
+        float imag = x.m_imag + y.m_imag;
+        return Complex{ real, imag };
+    }
 
     void testComplex()
     {
@@ -42,7 +48,7 @@ namespace ConstExprComplex {
 
         // verify 'constness' with the help of disassembly and
         // https://www.h-schmidt.net/FloatConverter/IEEE754de.html
-        
+
         std::cout << "Real: " << c3.real() << std::endl;
         std::cout << "Imag: " << c3.imag() << std::endl;
 
@@ -216,7 +222,7 @@ namespace ConstExprCollatz {
 
         std::for_each(std::rbegin(sequence), std::rend(sequence), [](const int elem) {
             std::cout << "   Element: " << elem << std::endl;
-        });
+            });
     }
 }
 

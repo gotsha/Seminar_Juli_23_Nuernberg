@@ -15,15 +15,18 @@ namespace ArgumentDependentNameLookup
 
     namespace MyProject
     {
+        void doSomething(MyNamespace::MyClass mc) {
+        }
+
         void test_01()
         {
             MyNamespace::MyClass obj;
 
-            // doSomething();    // Error: 'doSomething': identifier not found
+            MyNamespace::doSomething();    // Error: 'doSomething': identifier not found
 
-            MyNamespace::doSomething();    // works
+           // MyNamespace::doSomething();    // works
 
-            doSomething(obj);              // works too
+            MyNamespace::doSomething(obj);              // works too
         }
 
         void test_02()

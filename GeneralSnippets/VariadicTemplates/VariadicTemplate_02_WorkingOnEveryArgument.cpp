@@ -19,8 +19,35 @@ namespace VariadicTemplatesWorkingOnEveryArgument {
     // doesn't compile
     //template <typename... TArgs>
     //void doSomethingForAll(const TArgs& ... args) {
-    //    doSomething(args)...;
+    //    
+    //    doSomething(args) ...;
+    //    // doSomething(1), doSomething(2)
     //}
+
+    template <typename... TArgs>
+    void myDoSomethingForAll(const TArgs& ... args) {
+
+        // doSomething(args) ...;
+
+        std::initializer_list<int> list = {
+            ( doSomething(args) , 0 ) ... 
+        };
+
+        // doSomething(1), doSomething(2)
+    }
+
+    void my_test()
+    {
+        int n = 1;
+        int m = 2;
+        int a = 0;
+
+        a = (n = 3), (m = 4);   // Sequenz-Operator ,
+
+        myDoSomethingForAll(1, 23.45, 'A');
+    }
+
+
 
     template <typename... TArgs>
     void doSomethingForAll(const TArgs& ... args) {
@@ -81,9 +108,10 @@ namespace VariadicTemplatesWorkingOnEveryArgument {
 void main_variadic_templates_working_on_every_argument()
 {
     using namespace VariadicTemplatesWorkingOnEveryArgument;
-    test_01();
-    test_02_01();
-    test_02_02();
+    my_test();
+    //test_01();
+    //test_02_01();
+    //test_02_02();
 }
 
 // =====================================================================================

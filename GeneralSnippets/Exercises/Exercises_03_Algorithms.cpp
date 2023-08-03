@@ -63,14 +63,14 @@ namespace Exercises_Algorithms {
             std::vector<int> numbers(20);
 
             // uses structured binding
-            auto fibo = [p = std::pair{ 0, 1 }]() mutable {
+            auto fibo = [ p = std::pair{ 0, 1 } ]() mutable {
                 auto [a, b] = p;
                 p = { b, a + b };
                 return a;
             };
 
             // without structured binding
-            auto fibo2 = [p = std::pair{ 0, 1 }]() mutable {
+            auto fibo2 = [ p = std::pair{ 0, 1 } ]() mutable {
                 int n1 = p.first;
                 int n2 = p.second;
                 p = { n2, n1 + n2 };
@@ -79,6 +79,7 @@ namespace Exercises_Algorithms {
 
             // using a 'state' variable in the scope / "closure"
             auto pLocal = std::pair{ 0, 1 };
+
             auto fibo3 = [&] {
                 int n1 = pLocal.first;
                 int n2 = pLocal.second;
