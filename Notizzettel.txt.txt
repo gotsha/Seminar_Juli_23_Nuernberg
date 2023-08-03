@@ -595,3 +595,170 @@ Aufgaben zu Utility Klassen:
 
    Aufgabe 2	Visitor-Entwurfsmuster mit std::variant und std::visit
 
+=====================================================
+
+Betrachtung der Buchhandlung:
+
+a) Polymorphismus
+
+Zu beachten: Jeder Aufruf einer Methode eines Interfaces ist VIRTUAL
+
+   VIRTUAL == Indirekter Methodenaufruf
+      Indirekt: Methodenadresse steht in einer Tabelle (vtable) 
+
+b) Statische, direkte, nicht virtuelle Methodenaufruf
+      Direkt: Methodenadresse steht im Code (Linker / Lader (Loader)) / FixUp 
+
+   Der Aufruf ist in jedem Fall performanter.
+
+
+b1) Generische Programmierung:
+
+   Ist eine Variation dieses Themas in Richtung "statischer" Aufruf:
+
+    price = element.getPrice();
+
+    im Gegensatz zu
+
+    BookEx b;
+    IMedia* media = &b;
+    auto price = media->getPrice();
+
+   Konzept:  "Duck Typing"
+
+Was ist, wenn eine Methode fehlt ??
+
+            double getPrice() const { return m_price; }
+            size_t getCount() const { return m_count; }
+
+=================================================================
+
+Virtual versus Non-Virtual 
+
+Performance:    CRTP
+
+Was ist CRTP:
+
+"Polymorphismus Light"  
+
+Sieht wie Polymorphismus - ist aber statisch.
+
+Am besten:  Kochrezept
+
+Wieviel Laufzeitersparnis bringt das ??????????????
+
+Fallstudie:
+
+Bei den Übungen zu CRTP:
+
+https://github.com/pelocpp/cpp_modern_examples/blob/master/GeneralSnippets/Exercises/Exercises.md#Aufgaben-zu-CRTP
+
+==================================================================
+
+C++ 20:   Module
+
+Ähnliche Features, wie NodeJS, JavaScript, Python
+   durch deren Module unterstützen
+
+export, import
+
+GCC, Visual C++: ===> Precompiled Header
+
+Bessere Übersetzungszeiten:
+
+Ein Beispiel: "Dieses Programm" ==> 1.30 Minute ==> 45 Sekunden
+
+Probleme:
+
+Viele Intellisense Fehler
+
+ABER: Bessere Übersetzungszeit
+
+// ============================================
+
+std::any ist der Partner vom std::variant
+
+Unterschied: Es ist nicht erforderlich, die Datentypen
+   im Vorneherin festzulegen.
+
+
+// ============================================
+
+int  value;
+bool hasValue;
+
+===> std::optional<int>    // hat dieses Flag "im Bauch"
+
+
+// steht in value ein Wert drin?
+
+if (value == -1)   // könnte eine Abfrage sein: kein Wert
+
+-2
+
+-MAX_INT
+
+// ============================================
+
+Arrays:   C-Array
+
+std::array
+
+"Go for std::array"
+
+A)
+
+int numbers[100];              // C-Style Array
+
+vs
+
+std::array<int, 100> zahlen;   //  std::array
+
+FIXED-SIZE
+
+--------
+
+function (Array zu übergeben)   "Die Länge geht nicht mit"
+
+function ( ip* anfang, int len )    zb  function (numbers, 100)    // Array Decay
+
+
+int [10] function ()
+{
+}
+
+===========================================
+
+Zeichenketten:
+
+std::string:
+
+Daten der Zeichenkette liegen am Heap // new
+
+Ausnahme // Optimierung.
+
+a) SSO   ==>  Kleine Zeichenketten  // Small String Optimization
+
+b) std::string_view: NO HEAP
+
+
+
+==========================================================
+
+std::string_view
+
+Hilfsklasse, die einen const char* Zeiger und Länge kapselt
+
+2 Instanz-Variablen: 
+
+== Pointer
+== Länge
+
+Fremdsprachenfähigkeit:   mit std::string_view
+
+Was brauche ich NICHT:  std::string   // keinen HEAP
+
+==========================================================
+
+
+

@@ -71,7 +71,7 @@ namespace OptionalExamples {
         contact.setPhone("123456789");
 
         if (contact.getPhone()) {
-            std::cout << "Number: " << *contact.getPhone() << std::endl;
+            std::cout << "Number: " << contact.getPhone().value() << std::endl;
         }
         else {
             std::cout << "No Number found!" << std::endl;

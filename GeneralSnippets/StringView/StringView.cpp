@@ -10,8 +10,16 @@ module modern_cpp:string_view;
 
 namespace StringViewDemonstration {
 
+
+    void func(const char* p)
+    {
+        ((char*)  p) [0] = '!';
+    }
+
     void test_01()
     {
+        func("asdfsdfsdf");
+
         std::string_view sv("The quick brown fox jumps over the lazy dog");  // Konstante Zeichenketten
 
         std::string s("The quick brown fox jumps over the lazy dog");  //  Heap
@@ -22,14 +30,15 @@ namespace StringViewDemonstration {
 
     void test_02()
     {
-        std::string s("How vexingly quick daft zebras jump!");
+        std::string s("How vexingly quick daft zebras jump!");  // HEAP
 
-        std::string_view sv(s);
+        std::string_view sv(s);                               // Zeiger + Länge
 
         std::cout << sv << std::endl;
 
         s += "Sixty zippers were quickly picked from the woven jute bag";  // the content of s is reallocated !
 
+        std::cout << s << std::endl;
         std::cout << sv << std::endl;
     }
 
@@ -80,8 +89,8 @@ void main_string_view()
     using namespace StringViewDemonstration;
     test_01();
     test_02();
-    test_03();
-    test_04();
+    //test_03();
+    //test_04();
 }
 
 // =====================================================================================

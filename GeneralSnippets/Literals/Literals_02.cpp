@@ -260,7 +260,7 @@ namespace Literals_Color_CompileTime_02 {
         // constexpr Color col1 = 0x1FFFFFF_rgb;
 
         // illegal hexadecimal digit
-        // constexpr Color col2 = "0x00GG00"_rgb;
+    //    constexpr Color col2 = "0x00FF00"_rgb;
     }
 }
 
