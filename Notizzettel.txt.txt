@@ -761,4 +761,150 @@ Was brauche ich NICHT:  std::string   // keinen HEAP
 ==========================================================
 
 
+C++ und Threading:
+
+Das Standard - C++ API für Threading ist gesissermaßen der "kleinste gemeinsame Nenner"
+aller Plattformen, die C++ unterstützt.
+
+== Funktion für den Thread: Schnittstelle kann beliebig viele Parameter umfassen.
+
+C++  Threading:
+
+Es ist an der Klasse std::thread ZWINGEND  join oder detach aufzurufen.
+
+
+detach:  NON Blocking
+join:      Blocking, solange die Thread Prozedur am Laufen ist.
+
+Geben Ressourcen des Threads frei.
+
+Oder genauer: Detach entkoppelt den Rufer und den Thread.
+
+  Ressourcen des Threads werden freigegeben, wenn der Thread zu Ende ist.
+
+-----------------
+
+Windows:
+
+Wenn der primäre Thread einer Anwendung (main) sich beendet,
+werden alle Sekundär-Threads automatisch beendet !
+
+-----------------
+
+Pool von Threads:
+
+2 Möglichkeiten:
+
+a) packaged_task
+b) async und future
+
+===============================================================
+
+std::mutex
+  
+  Mutual Exclusion   // Gegenseitiger Ausschluss
+
+===============================================================
+
+Lock und Unlock sind kritisch bzgl. ihrer Verwendung / Notwendigkeit des Aufrufs:
+
+Lösung:    Smart Pointer:
+
+==>   Hüllen - Klasse:
+
+         lock:   Konstruktor
+        unlock:  Destruktor
+
+Name des Prinips: RAII    Resource Aquisition is Initialization
+
+
+
+https://github.com/pelocpp/cpp_design_patterns/blob/master/Patterns/RAII_Idiom/Resources/Readme.md
+
+
+Resource:                       SqlConnection // Socket  open (( close
+
+Noch ein Beispiel:
+
+https://github.com/pelocpp/cpp_case_studies/blob/master/CaseStudies/CodeConverter/CodeConverter.cpp
+
+==============================================================================================
+
+Thread Pools:
+
+C++ upon Windows:    std::async
+
+std::future:   Es gibt ein Resultat.    Träger eines Ergebnisses   
+
+  std::async und std::future
+
+==============================================================================================
+
+std::thread :
+
+Ergebnis zu erhalten:   Thread-Prozedur void
+
+Aber: Es gibt eine Abhilfe mit std::promise
+
+std::thread, std::promise und std::future
+
+==============================================================================================
+
+Eine Optimierung für Matrizen:
+
+https://github.com/pelocpp/cpp_modern_examples/blob/master/GeneralSnippets/ExpressionTemplates/ExpressionTemplates.md
+
+==============================================================================================
+
+C++ 20:
+
+Module
+
+Concepts    // Generische Programmierung
+
+Was haben Concepts mit Folding zu tun ????????????????????
+
+==============================================================================================
+
+End-of-Text
+
+==============================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

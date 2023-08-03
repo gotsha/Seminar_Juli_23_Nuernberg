@@ -4,10 +4,47 @@
 
 module modern_cpp:folding;
 
+namespace Folding_Seminar {
+
+    // C++ 11 
+
+    //template <typename T>
+    //T adder(T value) {
+    //    return value;
+    //}
+
+    //template <typename T, typename ... TRest>
+    //T adder(T value, TRest ...values) {
+
+    //    auto result = value + adder(values ...);
+    //    return result;
+    //}
+
+    template <typename ... TRest>
+    auto adder(TRest ... values) {
+
+        // 1 - 2 - 3   = -4   Standard
+        // 1 - (2 - 3) = +2   Wir setzen klammern
+
+
+        auto result = (... - values );   // values  +  ...
+        return result;
+    }
+
+    void test_seminar() {
+
+        int result = adder(1, 2, 3);
+    }
+}
+
+
+
 namespace Folding {
 
     /* folding examples: introduction
     */
+
+
 
     template<typename... TArgs>
     auto anotherAdder(TArgs... args) {
@@ -128,8 +165,13 @@ namespace Folding {
     }
 }
 
+
 void main_folding()
 {
+    using namespace Folding_Seminar;
+    test_seminar();
+    return;
+
     using namespace Folding;
     test_01();
     test_02();

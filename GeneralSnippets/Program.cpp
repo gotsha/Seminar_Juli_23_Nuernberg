@@ -46,7 +46,7 @@ int main()
         //main_generate();
         //main_generic_lambdas();
         //main_keyword_explicit();
-        //main_folding();
+        main_folding();
         //main_functional_programming();
         //main_functional_programming_alternate();
         //main_initializer_list();
@@ -75,7 +75,7 @@ int main()
         //main_shared_ptr();
         //main_sso();
         //main_static_assert();
-        main_string_view();
+        //main_string_view();
         //main_structured_binding();
         //main_class_templates_basics_01();
         //main_class_templates_basics_02();
