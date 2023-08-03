@@ -22,7 +22,7 @@ int main()
         //main_any();
         //main_apply_integer_sequence();  
         //main_argument_dependent_name_lookup();
-        //main_array();
+     //   main_array();
         //main_array_decay();
         //main_attributes();
         //main_auto();
@@ -46,12 +46,12 @@ int main()
         //main_generate();
         //main_generic_lambdas();
         //main_keyword_explicit();
-        //main_folding();
+        main_folding();
         //main_functional_programming();
         //main_functional_programming_alternate();
         //main_initializer_list();
         //main_input_output_streams();  
-        main_invoke();
+        //main_invoke();
         //main_lambdas();
         //main_lambda_and_closure();
         //main_lambdas_this_closure();
@@ -61,7 +61,7 @@ int main()
         //main_metaprogramming_02();
         //main_modules_import();
         //main_move_semantics();
-        //main_optional();
+       // main_optional();
         //main_perfect_forwarding();
         //main_raii();
         //main_raii_02();

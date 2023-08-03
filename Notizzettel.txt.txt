@@ -595,3 +595,316 @@ Aufgaben zu Utility Klassen:
 
    Aufgabe 2	Visitor-Entwurfsmuster mit std::variant und std::visit
 
+=====================================================
+
+Betrachtung der Buchhandlung:
+
+a) Polymorphismus
+
+Zu beachten: Jeder Aufruf einer Methode eines Interfaces ist VIRTUAL
+
+   VIRTUAL == Indirekter Methodenaufruf
+      Indirekt: Methodenadresse steht in einer Tabelle (vtable) 
+
+b) Statische, direkte, nicht virtuelle Methodenaufruf
+      Direkt: Methodenadresse steht im Code (Linker / Lader (Loader)) / FixUp 
+
+   Der Aufruf ist in jedem Fall performanter.
+
+
+b1) Generische Programmierung:
+
+   Ist eine Variation dieses Themas in Richtung "statischer" Aufruf:
+
+    price = element.getPrice();
+
+    im Gegensatz zu
+
+    BookEx b;
+    IMedia* media = &b;
+    auto price = media->getPrice();
+
+   Konzept:  "Duck Typing"
+
+Was ist, wenn eine Methode fehlt ??
+
+            double getPrice() const { return m_price; }
+            size_t getCount() const { return m_count; }
+
+=================================================================
+
+Virtual versus Non-Virtual 
+
+Performance:    CRTP
+
+Was ist CRTP:
+
+"Polymorphismus Light"  
+
+Sieht wie Polymorphismus - ist aber statisch.
+
+Am besten:  Kochrezept
+
+Wieviel Laufzeitersparnis bringt das ??????????????
+
+Fallstudie:
+
+Bei den Übungen zu CRTP:
+
+https://github.com/pelocpp/cpp_modern_examples/blob/master/GeneralSnippets/Exercises/Exercises.md#Aufgaben-zu-CRTP
+
+==================================================================
+
+C++ 20:   Module
+
+Ähnliche Features, wie NodeJS, JavaScript, Python
+   durch deren Module unterstützen
+
+export, import
+
+GCC, Visual C++: ===> Precompiled Header
+
+Bessere Übersetzungszeiten:
+
+Ein Beispiel: "Dieses Programm" ==> 1.30 Minute ==> 45 Sekunden
+
+Probleme:
+
+Viele Intellisense Fehler
+
+ABER: Bessere Übersetzungszeit
+
+// ============================================
+
+std::any ist der Partner vom std::variant
+
+Unterschied: Es ist nicht erforderlich, die Datentypen
+   im Vorneherin festzulegen.
+
+
+// ============================================
+
+int  value;
+bool hasValue;
+
+===> std::optional<int>    // hat dieses Flag "im Bauch"
+
+
+// steht in value ein Wert drin?
+
+if (value == -1)   // könnte eine Abfrage sein: kein Wert
+
+-2
+
+-MAX_INT
+
+// ============================================
+
+Arrays:   C-Array
+
+std::array
+
+"Go for std::array"
+
+A)
+
+int numbers[100];              // C-Style Array
+
+vs
+
+std::array<int, 100> zahlen;   //  std::array
+
+FIXED-SIZE
+
+--------
+
+function (Array zu übergeben)   "Die Länge geht nicht mit"
+
+function ( ip* anfang, int len )    zb  function (numbers, 100)    // Array Decay
+
+
+int [10] function ()
+{
+}
+
+===========================================
+
+Zeichenketten:
+
+std::string:
+
+Daten der Zeichenkette liegen am Heap // new
+
+Ausnahme // Optimierung.
+
+a) SSO   ==>  Kleine Zeichenketten  // Small String Optimization
+
+b) std::string_view: NO HEAP
+
+
+
+==========================================================
+
+std::string_view
+
+Hilfsklasse, die einen const char* Zeiger und Länge kapselt
+
+2 Instanz-Variablen: 
+
+== Pointer
+== Länge
+
+Fremdsprachenfähigkeit:   mit std::string_view
+
+Was brauche ich NICHT:  std::string   // keinen HEAP
+
+==========================================================
+
+
+C++ und Threading:
+
+Das Standard - C++ API für Threading ist gesissermaßen der "kleinste gemeinsame Nenner"
+aller Plattformen, die C++ unterstützt.
+
+== Funktion für den Thread: Schnittstelle kann beliebig viele Parameter umfassen.
+
+C++  Threading:
+
+Es ist an der Klasse std::thread ZWINGEND  join oder detach aufzurufen.
+
+
+detach:  NON Blocking
+join:      Blocking, solange die Thread Prozedur am Laufen ist.
+
+Geben Ressourcen des Threads frei.
+
+Oder genauer: Detach entkoppelt den Rufer und den Thread.
+
+  Ressourcen des Threads werden freigegeben, wenn der Thread zu Ende ist.
+
+-----------------
+
+Windows:
+
+Wenn der primäre Thread einer Anwendung (main) sich beendet,
+werden alle Sekundär-Threads automatisch beendet !
+
+-----------------
+
+Pool von Threads:
+
+2 Möglichkeiten:
+
+a) packaged_task
+b) async und future
+
+===============================================================
+
+std::mutex
+  
+  Mutual Exclusion   // Gegenseitiger Ausschluss
+
+===============================================================
+
+Lock und Unlock sind kritisch bzgl. ihrer Verwendung / Notwendigkeit des Aufrufs:
+
+Lösung:    Smart Pointer:
+
+==>   Hüllen - Klasse:
+
+         lock:   Konstruktor
+        unlock:  Destruktor
+
+Name des Prinips: RAII    Resource Aquisition is Initialization
+
+
+
+https://github.com/pelocpp/cpp_design_patterns/blob/master/Patterns/RAII_Idiom/Resources/Readme.md
+
+
+Resource:                       SqlConnection // Socket  open (( close
+
+Noch ein Beispiel:
+
+https://github.com/pelocpp/cpp_case_studies/blob/master/CaseStudies/CodeConverter/CodeConverter.cpp
+
+==============================================================================================
+
+Thread Pools:
+
+C++ upon Windows:    std::async
+
+std::future:   Es gibt ein Resultat.    Träger eines Ergebnisses   
+
+  std::async und std::future
+
+==============================================================================================
+
+std::thread :
+
+Ergebnis zu erhalten:   Thread-Prozedur void
+
+Aber: Es gibt eine Abhilfe mit std::promise
+
+std::thread, std::promise und std::future
+
+==============================================================================================
+
+Eine Optimierung für Matrizen:
+
+https://github.com/pelocpp/cpp_modern_examples/blob/master/GeneralSnippets/ExpressionTemplates/ExpressionTemplates.md
+
+==============================================================================================
+
+C++ 20:
+
+Module
+
+Concepts    // Generische Programmierung
+
+Was haben Concepts mit Folding zu tun ????????????????????
+
+==============================================================================================
+
+End-of-Text
+
+==============================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -15,7 +15,7 @@ concept NumericalEx = std::is_integral<T>::value || std::is_floating_point<T>::v
 namespace Requires_Clause {
 
     template <typename T>
-    requires Numerical<T>
+        requires Numerical<T>
     auto add(T a, T b)
     {
         return a + b;
@@ -23,7 +23,7 @@ namespace Requires_Clause {
 
     // "inlining" constraints on template parameter types
     template <typename T>
-    requires std::integral<T> || std::floating_point<T>
+        requires std::integral<T> || std::floating_point<T>
     auto addEx(T a, T b)
     {
         return a + b;
@@ -38,7 +38,7 @@ namespace Requires_Clause {
         std::cout << sum2 << std::endl;
 
         // no instance of function template "add" matches the argument list
-        // auto sum3 = add(123.456, 654.321F);
+       // auto sum3 = add( std::string{"ABC"}, std::string{"ABC"} );
     }
 
     template <typename T, typename U>
@@ -160,6 +160,16 @@ namespace Constrained_Template_Parameters {
 }
 
 namespace Abbreviated_Function_Templates {
+
+    int add2(int a, int b)
+    {
+        return a + b;
+    }
+
+    auto add3(auto a, auto b)
+    {
+        return a + b;
+    }
 
     auto add(Numerical auto a, Numerical auto b)
     {

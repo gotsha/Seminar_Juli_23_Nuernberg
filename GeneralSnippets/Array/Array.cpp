@@ -16,7 +16,8 @@ namespace StdArray {
 
     void test_02() {
 
-        /* initialization variants using CTAD: Class Template Argument Deduction
+        /* initialization variants using CTAD: 
+         * Class Template Argument Deduction
         */
 
         // type is deduced to std::array<double, 2>
@@ -28,7 +29,8 @@ namespace StdArray {
         // BUT, take care !!!!!
         // type is deduced to std::array<const char*, 1>
         // see std::to_array below
-        std::array array3{ "Hello C++ 20" };
+        using namespace std::literals;
+        std::array array3{ "Hello C++ 20"s };
     }
 
     void test_03() {
@@ -54,7 +56,7 @@ namespace StdArray {
         std::cout << array[3] << std::endl;
 
         // undefined behaviour
-        // std::cout << myArray[5] << std::endl;
+       // std::cout << myArray[5] << std::endl;
 
         // valid index
         array.at(2) = 33;
@@ -82,6 +84,7 @@ namespace StdArray {
     void print(const std::array<T, Length>& array) {
         std::cout << "Length: " << array.size() << std::endl;
     }
+
 
     void test_05() {
 
@@ -235,8 +238,8 @@ namespace StdArray {
     }
 
     // returning a std::array object: works
-    auto crossProduct(
-        const std::array<int, 3>& a, const std::array<int, 3>& b) -> std::array<int, 3>
+    std::array<int, 3> crossProduct(
+        const std::array<int, 3>& a, const std::array<int, 3>& b) // -> std::array<int, 3>
     {
         return { {
             a[1] * b[2] - a[2] * b[1],
@@ -254,7 +257,7 @@ namespace StdArray {
     auto c_crossProduct(
         const int a[3], const int b[3]) // -> int[3]
     {
-        int result[3]{
+        int result[3] {
             a[1] * b[2] - a[2] * b[1],
             a[2] * b[0] - a[0] * b[2],
             a[0] * b[1] - a[1] * b[0],
@@ -307,6 +310,8 @@ namespace StdArray {
 
     void printSpan(std::span<int> values) {
 
+        values[0] = 123;
+
         std::cout << std::format("Number of elements: {}\n", values.size());
         std::cout << std::format("Size of span: {}\n", values.size_bytes());
 
@@ -317,6 +322,8 @@ namespace StdArray {
     }
 
     void printSpanConst(std::span<const int> values) {
+
+        // values[0] = 123;
 
         std::cout << std::format("Number of elements: {}\n", values.size());
         std::cout << std::format("Size of span: {}\n", values.size_bytes());

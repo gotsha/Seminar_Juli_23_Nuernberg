@@ -9,7 +9,7 @@ namespace Exercises_CRTP {
     namespace Exercise_01 {
 
         using Clock = std::chrono::high_resolution_clock;
-        constexpr long MaxIterations = 10000;
+        constexpr long MaxIterations = 20000;
         constexpr bool Verbose = false;
         constexpr int Width = 400;
         constexpr int Height = 400;

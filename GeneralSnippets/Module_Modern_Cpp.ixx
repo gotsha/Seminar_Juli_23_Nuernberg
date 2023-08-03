@@ -75,6 +75,8 @@ export import :virtual_base_class_destructor;
 export import :virtual_override_final;
 export import :weak_ptr;
 
+export int main();
+
 // =====================================================================================
 // End-of-File
 // =====================================================================================
